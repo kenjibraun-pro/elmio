@@ -64,6 +64,11 @@ type WriteText = {
     text: string;
 };
 
+interface WriteTextResult {
+    success: boolean;
+    error: string | null;
+}
+
 interface BrowserEffect {
     type: string;
     config: SetTimeoutConfig;
@@ -248,6 +253,7 @@ export {
     Log,
     ClipboardEffect,
     WriteText,
+    WriteTextResult,
     JsMsg,
     BrowserEffect,
     SetTimeoutConfig,
