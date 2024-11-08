@@ -1,0 +1,19 @@
+[package]
+name = "elmio-macro"
+version = "0.1.0"
+edition = "2021"
+authors = ["Success Kingsley <hello@xosnrdev.tech>"]
+license = "Apache-2.0"
+repository = "https://github.com/xosnrdev/elmio"
+categories = ["rust-macro"]
+keywords = ["procedural-macro", "elm-architecture", "webassembly"]
+description = """
+Procedural macros for the Elmio framework.
+"""
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1.0.37"
+syn = "2.0.87"
