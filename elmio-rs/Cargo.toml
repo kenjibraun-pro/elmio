@@ -1,14 +1,7 @@
-[package]
-name = "elmio-rs"
-version = "0.1.0"
-authors = ["Success Kingsley <hello@xosnrdev.tech>"]
-license = "Apache-2.0"
-edition = "2021"
-repository = "https://github.com/xosnrdev/elmio"
-categories = ["web-framework"]
-keywords = ["web", "framework", "elm-architecture", "server-side-rendering", "webassembly"]
-description = """
-The Rust core of the Elmio framework.
-"""
-
-[dependencies]
+[workspace]
+resolver = "2"
+members = [
+    "elmio-macro",
+    "elmio-core"
+    # "elmio-cli",
+]
