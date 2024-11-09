@@ -6,7 +6,7 @@ authors = ["Success Kingsley <hello@xosnrdev.tech>"]
 license = "Apache-2.0"
 repository = "https://github.com/xosnrdev/elmio"
 categories = ["wasm", "web-programming"]
-keywords = ["web", "framework", "elm-architecture", "server-side-rendering", "webassembly"]
+keywords = ["web", "framework", "elm-architecture", "webassembly"]
 description = """
 The Rust core of the Elmio framework.
 """
