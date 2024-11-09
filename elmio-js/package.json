@@ -2,7 +2,7 @@
     "name": "elmio-js",
     "version": "1.0.0",
     "description": "The Javascript runtime counterpart for elmio-rs. Uses morphdom to partially update the DOM.",
-    "main": "src/index.js",
+    "main": "src/main.js",
     "type": "module",
     "scripts": {
         "fmt": "biome format --write .",
