@@ -1,6 +1,6 @@
 import { EventTarget, EventTargetElement } from "./rust/types";
 
-interface Browser {
+export interface Browser {
     getElementById(id: string): HTMLElement | null;
     getActiveElement(): Element | null;
     addEventListener(
@@ -8,13 +8,13 @@ interface Browser {
         type: string,
         listener: EventListenerOrEventListenerObject,
         config: EventListenConfig,
-    ): AbortFunction;
-    setInterval(handler: TimerHandler, timeout: number): AbortFunction;
-    setTimeout(handler: TimerHandler, timeout: number): AbortFunction;
+    ): AbortFn;
+    setInterval(handler: TimerHandler, timeout: number): AbortFn;
+    setTimeout(handler: TimerHandler, timeout: number): AbortFn;
     dispatchEvent(eventTarget: EventTarget, event: Event): void;
 }
 
-class RealBrowser implements Browser {
+export class RealBrowser implements Browser {
     public getElementById(id: string): HTMLElement | null {
         return document.getElementById(id);
     }
@@ -28,7 +28,7 @@ class RealBrowser implements Browser {
         type: string,
         listener: EventListenerOrEventListenerObject,
         config: EventListenConfig,
-    ): AbortFunction {
+    ): AbortFn {
         const controller = new AbortController();
         const listenTarget = this.getListenTarget(target);
 
@@ -45,7 +45,7 @@ class RealBrowser implements Browser {
         };
     }
 
-    public setInterval(handler: TimerHandler, timeout?: number): AbortFunction {
+    public setInterval(handler: TimerHandler, timeout?: number): AbortFn {
         const id = window.setInterval(handler, timeout);
         return {
             abort: () => {
@@ -54,7 +54,7 @@ class RealBrowser implements Browser {
         };
     }
 
-    public setTimeout(handler: TimerHandler, timeout?: number): AbortFunction {
+    public setTimeout(handler: TimerHandler, timeout?: number): AbortFn {
         const id = window.setTimeout(handler, timeout);
         return {
             abort: () => {
@@ -90,7 +90,7 @@ class RealBrowser implements Browser {
     }
 }
 
-function getEventListenTarget(str: string): EventListenTarget {
+export function getEventListenTarget(str: string): EventListenTarget {
     switch (str) {
         case "window":
             return EventListenTarget.Window;
@@ -111,10 +111,8 @@ enum EventListenTarget {
     Document,
 }
 
-interface AbortFunction {
+export interface AbortFn {
     abort: () => void;
 }
 
 type TimerHandler = () => void;
-
-export { Browser, RealBrowser, AbortFunction, getEventListenTarget };
