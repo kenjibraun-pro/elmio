@@ -1,11 +1,11 @@
-import { IConsole } from "../browser/console";
+import { Console } from "../browser/console";
 import { Domain, Logger } from "../logger";
 import { ConsoleEffect, Log } from "../rust/types";
 
 export class ConsoleEffectHandler {
     constructor(
-        private readonly console: IConsole<string>,
-        private readonly logger: Logger<object>,
+        private readonly console: Console,
+        private readonly logger: Logger,
     ) {}
 
     public handle(effect: ConsoleEffect): Promise<void> {
