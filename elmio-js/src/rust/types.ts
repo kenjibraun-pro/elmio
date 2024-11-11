@@ -177,7 +177,7 @@ interface MessageWithEffect<T> {
 
 interface Subscription<T> {
     type: string;
-    config: RustInterval<T> | EventSubscription<T>;
+    config: RustInterval<T> | RustEventListener<T>;
 }
 
 interface RustInterval<T> {
@@ -186,7 +186,7 @@ interface RustInterval<T> {
     msg: SubscriptionMsg<T>;
 }
 
-interface EventSubscription<T> {
+interface RustEventListener<T> {
     id: string;
     listenTarget: string;
     eventType: string;
@@ -242,7 +242,7 @@ export {
     Msg,
     Subscription,
     RustInterval,
-    EventSubscription,
+    RustEventListener,
     DebounceConfig,
     EventMatcher,
     ExactSelectorMatcher,

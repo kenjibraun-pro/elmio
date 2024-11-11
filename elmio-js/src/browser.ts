@@ -4,13 +4,13 @@ export interface Browser {
     getElementById(id: string): HTMLElement | null;
     getActiveElement(): Element | null;
     addEventListener(
-        target: EventListenTarget,
+        target: ListenTarget,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        config: EventListenConfig,
+        config: ListenConfig,
     ): AbortFn;
-    setInterval(handler: TimerHandler, timeout: number): AbortFn;
-    setTimeout(handler: TimerHandler, timeout: number): AbortFn;
+    setInterval(handler: TimerHandler, timeout?: number): AbortFn;
+    setTimeout(handler: TimerHandler, timeout?: number): AbortFn;
     dispatchEvent(eventTarget: EventTarget, event: Event): void;
 }
 
@@ -24,22 +24,22 @@ export class RealBrowser implements Browser {
     }
 
     public addEventListener(
-        target: EventListenTarget,
+        target: ListenTarget,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        config: EventListenConfig,
+        config: ListenConfig,
     ): AbortFn {
         const controller = new AbortController();
-        const listenTarget = this.getListenTarget(target);
+        const listenTarget = getListenTarget(target);
 
         listenTarget.addEventListener(type, listener, {
+            signal: controller.signal,
             capture: config.capture,
             passive: config.passive,
-            signal: controller.signal,
         });
 
         return {
-            abort: () => {
+            abort() {
                 controller.abort();
             },
         };
@@ -47,8 +47,9 @@ export class RealBrowser implements Browser {
 
     public setInterval(handler: TimerHandler, timeout?: number): AbortFn {
         const id = window.setInterval(handler, timeout);
+
         return {
-            abort: () => {
+            abort() {
                 window.clearInterval(id);
             },
         };
@@ -56,63 +57,64 @@ export class RealBrowser implements Browser {
 
     public setTimeout(handler: TimerHandler, timeout?: number): AbortFn {
         const id = window.setTimeout(handler, timeout);
+
         return {
-            abort: () => {
+            abort() {
                 window.clearTimeout(id);
             },
         };
     }
 
     public dispatchEvent(eventTarget: EventTarget, event: Event): void {
-        const { type, config } = eventTarget;
-        switch (type) {
+        switch (eventTarget.type) {
             case "window":
                 window.dispatchEvent(event);
                 break;
+
             case "document":
                 document.dispatchEvent(event);
                 break;
+
             case "element":
-                const _config = config as EventTargetElement;
-                const element = document.getElementById(_config.elementId);
+                const config = eventTarget.config as EventTargetElement;
+                const element = document.getElementById(config.elementId);
                 element?.dispatchEvent(event);
                 break;
         }
     }
-
-    private getListenTarget(target: EventListenTarget): Window | Document {
-        switch (target) {
-            case EventListenTarget.Window:
-                return window;
-            case EventListenTarget.Document:
-                return document;
-        }
-    }
 }
 
-export function getEventListenTarget(str: string): EventListenTarget {
-    switch (str) {
-        case "window":
-            return EventListenTarget.Window;
-        case "document":
-            return EventListenTarget.Document;
-        default:
-            throw new TypeError(`Unknown event listen target: ${str}`);
-    }
-}
-
-interface EventListenConfig {
-    capture: boolean;
-    passive: boolean;
-}
-
-enum EventListenTarget {
+enum ListenTarget {
     Window,
     Document,
+}
+
+export function listenTargetFromString(str: string): ListenTarget {
+    switch (str) {
+        case "window":
+            return ListenTarget.Window;
+
+        case "document":
+            return ListenTarget.Document;
+    }
+
+    throw new Error(`Unknown listen target: ${str}`);
+}
+
+function getListenTarget(target: ListenTarget): Window | Document {
+    switch (target) {
+        case ListenTarget.Window:
+            return window;
+        case ListenTarget.Document:
+            return document;
+    }
+}
+
+interface ListenConfig {
+    capture: boolean;
+    passive: boolean;
 }
 
 export interface AbortFn {
     abort: () => void;
 }
-
-type TimerHandler = () => void;
