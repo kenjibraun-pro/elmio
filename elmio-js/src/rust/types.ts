@@ -27,7 +27,7 @@ interface JsMsg<T> {
 
 interface Effect<T> {
     type: string;
-    config: DomEffect | TimeEffect<T> | ConsoleEffect | NavigationEffect | StorageEffect;
+    config: DomEffect | TimeEffect<T> | ConsoleEffect | NavigationEffect | LocalStorageEffect;
 }
 
 interface NavigationEffect {
@@ -131,10 +131,32 @@ interface GetTargetDataValue {
     parseAsJson: boolean;
 }
 
-interface StorageEffect {
+interface LocalStorageEffect {
     type: string;
-    config: StorageGetItem | StorageSetItem;
-    storageType: "localStorage" | "sessionStorage";
+    config: LocalStorageGetItem | LocalStorageSetItem;
+}
+
+interface SessionStorageEffect {
+    type: string;
+    config: SessionStorageGetItem | SessionStorageSetItem;
+}
+
+interface LocalStorageGetItem {
+    key: string;
+}
+
+interface LocalStorageSetItem {
+    key: string;
+    value: string;
+}
+
+interface SessionStorageGetItem {
+    key: string;
+}
+
+interface SessionStorageSetItem {
+    key: string;
+    value: string;
 }
 
 interface StorageGetItem {
@@ -229,7 +251,8 @@ export {
     KeyboardKeyMatcher,
     Effect,
     NavigationEffect,
-    StorageEffect,
+    LocalStorageEffect,
+    SessionStorageEffect,
     StorageGetItem,
     StorageSetItem,
     MessageWithEffect,
