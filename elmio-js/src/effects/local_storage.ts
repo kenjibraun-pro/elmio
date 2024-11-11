@@ -1,6 +1,6 @@
 import { LocalStorage } from "../browser/local_storage";
 import { Domain, Logger, Verbosity } from "../logger";
-import { StorageEffect, StorageGetItem, StorageSetItem } from "../rust/types";
+import { LocalStorageEffect, StorageGetItem, StorageSetItem } from "../rust/types";
 import JsonHelper from "../utils/json";
 
 type HandleReturnType =
@@ -15,7 +15,7 @@ export default class LocalStorageEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: StorageEffect): Promise<HandleReturnType> {
+    public handle(effect: LocalStorageEffect): Promise<HandleReturnType> {
         switch (effect.type) {
             case "getItem":
                 const getItemResult = this.handleGetItem(effect.config as StorageGetItem);
@@ -34,7 +34,7 @@ export default class LocalStorageEffectHandler {
             default:
                 this.logger.warn({
                     domain: Domain.LocalStorage,
-                    message: "Unknown localStorage effect",
+                    message: `Unknown local storage effect type: ${effect.type}`,
                     context: { type: effect.type },
                 });
         }
