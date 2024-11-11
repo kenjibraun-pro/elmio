@@ -1,14 +1,14 @@
-export interface IWindow {
-    getSize(): IWindowSize;
+export interface Window {
+    getSize(): WindowSize;
 }
 
-export interface IWindowSize {
+export interface WindowSize {
     width: number;
     height: number;
 }
 
-export class BrowserWindow implements IWindow {
-    public getSize(): IWindowSize {
+export class BrowserWindow implements Window {
+    public getSize(): WindowSize {
         return {
             width: window.innerWidth,
             height: window.innerHeight,

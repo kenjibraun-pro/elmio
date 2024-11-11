@@ -1,9 +1,9 @@
-export interface IHistory {
+export interface History {
     pushUrl(url: string): void;
     replaceUrl(url: string): void;
 }
 
-export class BrowserHistory implements IHistory {
+export class BrowserHistory implements History {
     public pushUrl(url: string): void {
         history.pushState({}, "", url);
     }

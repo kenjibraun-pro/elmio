@@ -1,8 +1,8 @@
-export interface IDate {
+export interface Date {
     now(): number;
 }
 
-export class BrowserDate implements IDate {
+export class BrowserDate implements Date {
     public now(): number {
         return Date.now();
     }
