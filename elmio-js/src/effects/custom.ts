@@ -17,7 +17,7 @@ class CustomEffectHandler<T> {
 
     constructor(
         private readonly config: Config,
-        private readonly logger: Logger<object>,
+        private readonly logger: Logger,
     ) {}
 
     public handle(effect: T): Promise<T> {
@@ -33,7 +33,7 @@ class CustomEffectHandler<T> {
         return Promise.resolve(effect);
     }
 
-    private setHandler(handler: (effect: T) => T): void {
+    public setHandler(handler: (effect: T) => T): void {
         this.state.handler = handler;
 
         if (this.state.effectBacklog.length > 0) {
