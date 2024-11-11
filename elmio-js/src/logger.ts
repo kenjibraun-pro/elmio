@@ -1,16 +1,15 @@
 interface Logger<T> {
     warn(entry: LogEntry<T>): void;
     error(entry: LogEntry<T>): void;
-    log(entry: LogEntryWithVerbosity<T>): void;
+    debug(entry: DebugEntry<T>): void;
 }
 
 const PREFIX = "Elmio";
 
-interface LoggerConfig {
+interface Config {
     debugDomains: Domain[];
-    loggerType: LoggerType;
-    verbosity: Verbosity;
-    globalDebugOverride?: boolean;
+    debugLogger: DebugLogger;
+    debugVerbosity: Verbosity;
 }
 
 interface LogEntry<T> {
@@ -19,55 +18,64 @@ interface LogEntry<T> {
     context: T;
 }
 
-interface LogEntryWithVerbosity<T> extends LogEntry<T> {
+interface DebugEntry<T> extends LogEntry<T> {
     verbosity: Verbosity;
 }
 
 class BrowserLogger<T> implements Logger<T> {
-    constructor(private readonly config: LoggerConfig) {}
+    constructor(private readonly config: Config) {}
 
     public warn({ domain, message, context }: LogEntry<T>): void {
-        this.log({ domain, verbosity: Verbosity.Warning, message, context });
+        console.warn(`[${PREFIX}:${Domain[domain]}]`, message, context);
     }
 
     public error({ domain, message, context }: LogEntry<T>): void {
-        this.log({ domain, verbosity: Verbosity.Error, message, context });
+        console.error(`[${PREFIX}:${Domain[domain]}]`, message, context);
     }
 
-    public log({ domain, verbosity, message, context }: LogEntryWithVerbosity<T>): void {
-        if (this.shouldLog(domain, verbosity)) {
-            const logger = this.getLogger();
+    public debug({ domain, verbosity, message, context }: DebugEntry<T>): void {
+        if (
+            (this.validDomain(domain) && this.validVerbosity(verbosity)) ||
+            this.hasGlobalOverride()
+        ) {
+            const logger = this.getDebugLogger<string | T>();
             logger(`[${PREFIX}:${Domain[domain]}]`, message, context);
         }
     }
 
-    private getLogger(): (...data: unknown[]) => void {
-        switch (this.config.loggerType) {
-            case LoggerType.Log:
+    private getDebugLogger<T>(): (...data: T[]) => void {
+        switch (this.config.debugLogger) {
+            case DebugLogger.Log:
                 return console.log;
-            case LoggerType.Trace:
+
+            case DebugLogger.Trace:
                 return console.trace;
         }
     }
 
-    private shouldLog(domain: Domain, verbosity: Verbosity): boolean {
-        return (
-            this.validDomain(domain) &&
-            this.validVerbosity(verbosity) &&
-            (this.config.globalDebugOverride ?? false)
-        );
-    }
-
     private validDomain(domain: Domain): boolean {
+        if (this.config.debugDomains.length === 0) {
+            return false;
+        }
+
         return (
-            this.config.debugDomains.length === 0 ||
             this.config.debugDomains.includes(domain) ||
             this.config.debugDomains.includes(Domain.All)
         );
     }
 
     private validVerbosity(verbosity: Verbosity): boolean {
-        return this.config.verbosity >= verbosity;
+        switch (this.config.debugVerbosity) {
+            case Verbosity.Normal:
+                return verbosity === Verbosity.Normal;
+
+            case Verbosity.Verbose:
+                return true;
+        }
+    }
+
+    private hasGlobalOverride(): boolean {
+        return window && "elmioDebug" in window && (window.elmioDebug as boolean);
     }
 }
 
@@ -89,50 +97,45 @@ enum Domain {
     CustomEffect,
 }
 
-enum LoggerType {
+enum DebugLogger {
     Log,
     Trace,
 }
 
 enum Verbosity {
-    Debug = 0,
-    Normal = 1,
-    Warning = 2,
-    Error = 3,
+    Normal,
+    Verbose,
 }
 
-function defaultLoggerConfig(): LoggerConfig {
+function defaultLoggerConfig(): Config {
     return {
         debugDomains: [],
-        loggerType: LoggerType.Log,
-        verbosity: Verbosity.Normal,
+        debugLogger: DebugLogger.Log,
+        debugVerbosity: Verbosity.Normal,
     };
 }
 
-function debugLoggerConfig(): LoggerConfig {
+function defaultDebugConfig(): Config {
     return {
         debugDomains: [Domain.All],
-        loggerType: LoggerType.Log,
-        verbosity: Verbosity.Debug,
-        globalDebugOverride: true,
+        debugLogger: DebugLogger.Log,
+        debugVerbosity: Verbosity.Normal,
     };
 }
 
-function verboseDebugConfig(): LoggerConfig {
+function verboseDebugConfig(): Config {
     return {
         debugDomains: [Domain.All],
-        loggerType: LoggerType.Log,
-        verbosity: Verbosity.Debug,
-        globalDebugOverride: true,
+        debugLogger: DebugLogger.Log,
+        debugVerbosity: Verbosity.Verbose,
     };
 }
 
-function traceDebugConfig(): LoggerConfig {
+function traceDebugConfig(): Config {
     return {
         debugDomains: [Domain.All],
-        loggerType: LoggerType.Trace,
-        verbosity: Verbosity.Debug,
-        globalDebugOverride: true,
+        debugLogger: DebugLogger.Trace,
+        debugVerbosity: Verbosity.Verbose,
     };
 }
 
@@ -140,11 +143,11 @@ export {
     Logger,
     BrowserLogger,
     Domain,
-    LoggerType,
-    LoggerConfig,
+    DebugLogger,
+    Config,
     Verbosity,
     defaultLoggerConfig,
-    debugLoggerConfig,
+    defaultDebugConfig,
     verboseDebugConfig,
     traceDebugConfig,
 };
