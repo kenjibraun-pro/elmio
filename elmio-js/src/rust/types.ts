@@ -27,7 +27,7 @@ interface JsMsg<T> {
 
 interface Effect<T> {
     type: string;
-    config: DomEffect | TimeEffect<T> | ConsoleEffect | NavigationEffect | StorageEffect<T>;
+    config: DomEffect | TimeEffect<T> | ConsoleEffect | NavigationEffect | StorageEffect;
 }
 
 interface NavigationEffect {
@@ -131,9 +131,9 @@ interface GetTargetDataValue {
     parseAsJson: boolean;
 }
 
-interface StorageEffect<T> {
+interface StorageEffect {
     type: string;
-    config: StorageGetItem | StorageSetItem<T>;
+    config: StorageGetItem | StorageSetItem;
     storageType: "localStorage" | "sessionStorage";
 }
 
@@ -141,9 +141,9 @@ interface StorageGetItem {
     key: string;
 }
 
-interface StorageSetItem<T> {
+interface StorageSetItem {
     key: string;
-    value: T;
+    value: string;
 }
 
 interface MessageWithEffect<T> {
