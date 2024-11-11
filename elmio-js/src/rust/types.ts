@@ -177,10 +177,10 @@ interface MessageWithEffect<T> {
 
 interface Subscription<T> {
     type: string;
-    config: PeriodicSubscription<T> | EventSubscription<T>;
+    config: RustInterval<T> | EventSubscription<T>;
 }
 
-interface PeriodicSubscription<T> {
+interface RustInterval<T> {
     id: string;
     duration: number;
     msg: SubscriptionMsg<T>;
@@ -241,7 +241,7 @@ export {
     Model,
     Msg,
     Subscription,
-    PeriodicSubscription,
+    RustInterval,
     EventSubscription,
     DebounceConfig,
     EventMatcher,
