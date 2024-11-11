@@ -1,9 +1,9 @@
-export interface IConsole<T> {
-    log(...args: T[]): void;
+export interface Console {
+    log(...args: string[]): void;
 }
 
-export class BrowserConsole<T> implements IConsole<T> {
-    public log(...args: T[]): void {
+export class BrowserConsole implements Console {
+    public log(...args: string[]): void {
         console.log(...args);
     }
 }
