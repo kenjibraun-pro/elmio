@@ -16,7 +16,7 @@ interface Page<T> {
     init(): Model<T>;
     update(msg: Msg, model: Model<T>): Model<T>;
     updateFromJs(msg: JsMsg<T>, model: Model<T>): Model<T>;
-    getSubscriptions(model: Model<T>): Subscription<T>[];
+    getSubscriptions(model: Model<T>): Subscription[];
     viewBody(model: Model<T>): string;
 }
 
@@ -175,7 +175,7 @@ interface EffectfulMsg {
     sourceEvent: Event | null;
 }
 
-interface Subscription<T> {
+interface Subscription {
     type: string;
     config: RustInterval | RustEventListener;
 }
