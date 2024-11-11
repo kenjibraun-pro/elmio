@@ -8,7 +8,10 @@ const PLACEHOLDER_VALUE = "$CAPTURE_VALUE";
  * @param newValue The value to replace PLACEHOLDER_VALUE with.
  * @returns A new object with placeholders replaced by newValue.
  */
-export function replacePlaceholder<T extends ReplaceableValue>(obj: object, newValue: T): object {
+export default function replacePlaceholder<T extends ReplaceableValue>(
+    obj: object,
+    newValue: T,
+): object {
     return replaceObject(obj, newValue);
 }
 
