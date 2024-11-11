@@ -5,25 +5,26 @@ import { BrowserEffect, SetTimeoutConfig } from "../rust/types";
 export class BrowserEffectHandler {
     constructor(
         private readonly browser: Browser,
-        private readonly logger: Logger<BrowserEffect>,
+        private readonly logger: Logger,
     ) {}
 
-    public async handle(effect: BrowserEffect): Promise<void> {
+    public handle(effect: BrowserEffect): Promise<void> {
         switch (effect.type) {
             case "setTimeout":
-                await this.handleSetTimeout(effect.config as SetTimeoutConfig);
-                break;
+                return this.setTimeout(effect.config as SetTimeoutConfig);
+
             default:
                 this.logger.warn({
                     domain: Domain.Browser,
-                    message: `Unknown effect type: ${effect.type}`,
-                    context: effect,
+                    message: `Unknown browser effect type: ${effect.type}`,
+                    context: { type: effect.type },
                 });
-                break;
         }
+
+        return Promise.resolve();
     }
 
-    private handleSetTimeout(config: SetTimeoutConfig): Promise<void> {
+    private setTimeout(config: SetTimeoutConfig): Promise<void> {
         return new Promise((resolve) => {
             this.browser.setTimeout(() => {
                 resolve();

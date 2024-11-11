@@ -5,11 +5,11 @@ interface State<T> {
     effectBacklog: T[];
 }
 
-interface Config {
+export interface Config {
     useBacklog: boolean;
 }
 
-class CustomEffectHandler<T> {
+export class CustomEffectHandler<T> {
     private readonly state: State<T> = {
         handler: null,
         effectBacklog: [],
@@ -96,10 +96,8 @@ class CustomEffectHandler<T> {
     }
 }
 
-function defaultCustomEffectConfig(): Config {
+export function defaultCustomEffectConfig(): Config {
     return {
         useBacklog: true,
     };
 }
-
-export { CustomEffectHandler, defaultCustomEffectConfig, Config };

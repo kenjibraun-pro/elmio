@@ -8,7 +8,7 @@ type HandleReturnType =
     | { type: "setItem"; result: boolean }
     | void;
 
-export default class LocalStorageEffectHandler {
+export class LocalStorageEffectHandler {
     constructor(
         private readonly localStorage: LocalStorage,
         private readonly jsonHelper: JsonHelper,

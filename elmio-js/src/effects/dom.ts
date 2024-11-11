@@ -25,7 +25,7 @@ type HandleReturnType =
     | { type: "getTargetDataValue"; result: string | null }
     | void;
 
-export default class DomEffectHandler {
+export class DomEffectHandler {
     constructor(
         private readonly browser: Browser,
         private readonly window: Window,
