@@ -1,7 +1,7 @@
-import { LocalStorage } from "../browser/local_storage";
-import { Domain, Logger, Verbosity } from "../logger";
-import { LocalStorageEffect, StorageGetItem, StorageSetItem } from "../rust/types";
-import JsonHelper from "../utils/json";
+import type { LocalStorage } from "../browser/local_storage";
+import { Domain, type Logger, Verbosity } from "../logger";
+import type { LocalStorageEffect, StorageGetItem, StorageSetItem } from "../rust/types";
+import type JsonHelper from "../utils/json";
 
 type HandleReturnType =
     | { type: "getItem"; result: string | null }
@@ -17,19 +17,21 @@ export class LocalStorageEffectHandler {
 
     public handle(effect: LocalStorageEffect): Promise<HandleReturnType> {
         switch (effect.type) {
-            case "getItem":
+            case "getItem": {
                 const getItemResult = this.handleGetItem(effect.config as StorageGetItem);
                 return Promise.resolve({
                     type: "getItem",
                     result: getItemResult,
                 });
+            }
 
-            case "setItem":
+            case "setItem": {
                 const setItemResult = this.handleSetItem(effect.config as StorageSetItem);
                 return Promise.resolve({
                     type: "setItem",
                     result: setItemResult,
                 });
+            }
 
             default:
                 this.logger.warn({

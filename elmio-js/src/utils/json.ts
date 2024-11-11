@@ -1,4 +1,4 @@
-import { Domain, Logger } from "../logger";
+import { Domain, type Logger } from "../logger";
 
 export default class JsonHelper {
     constructor(private readonly logger: Logger) {}

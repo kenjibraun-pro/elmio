@@ -1,20 +1,20 @@
 type Model<T> = T;
 
-type Msg<T> = PureMsg<T> | MessageWithEffect<T>;
+type Msg = PureMsg | EffectfulMsg;
 
-interface PureMsg<T> {
-    msg: T;
+interface PureMsg {
+    msg: unknown;
 }
 
-interface SubscriptionMsg<T> {
+interface SubscriptionMsg {
     type: string;
-    config: MessageWithEffect<T> | T;
+    config: EffectfulMsg | unknown;
 }
 
 interface Page<T> {
     id(): string;
     init(): Model<T>;
-    update(msg: Msg<T>, model: Model<T>): Model<T>;
+    update(msg: Msg, model: Model<T>): Model<T>;
     updateFromJs(msg: JsMsg<T>, model: Model<T>): Model<T>;
     getSubscriptions(model: Model<T>): Subscription<T>[];
     viewBody(model: Model<T>): string;
@@ -25,9 +25,9 @@ interface JsMsg<T> {
     data: T;
 }
 
-interface Effect<T> {
+interface Effect {
     type: string;
-    config: DomEffect | TimeEffect<T> | ConsoleEffect | NavigationEffect | LocalStorageEffect;
+    config: DomEffect | TimeEffect | ConsoleEffect | NavigationEffect | LocalStorageEffect;
 }
 
 interface NavigationEffect {
@@ -78,9 +78,9 @@ interface SetTimeoutConfig {
     duration: number;
 }
 
-interface TimeEffect<T> {
+interface TimeEffect {
     type: string;
-    config: T;
+    config: unknown;
 }
 
 interface DispatchEvent {
@@ -95,9 +95,9 @@ interface EventTarget {
     config: EventTargetWindow | EventTargetDocument | EventTargetElement;
 }
 
-interface EventTargetWindow {}
+type EventTargetWindow = object;
 
-interface EventTargetDocument {}
+type EventTargetDocument = object;
 
 interface EventTargetElement {
     elementId: string;
@@ -168,30 +168,30 @@ interface StorageSetItem {
     value: string;
 }
 
-interface MessageWithEffect<T> {
-    msg: T;
-    effect: Effect<T>;
+interface EffectfulMsg {
+    msg: unknown;
+    effect: Effect;
     // TODO: remove sourceEvent, the event is populated from js (not rust)
     sourceEvent: Event | null;
 }
 
 interface Subscription<T> {
     type: string;
-    config: RustInterval<T> | RustEventListener<T>;
+    config: RustInterval | RustEventListener;
 }
 
-interface RustInterval<T> {
+interface RustInterval {
     id: string;
     duration: number;
-    msg: SubscriptionMsg<T>;
+    msg: SubscriptionMsg;
 }
 
-interface RustEventListener<T> {
+interface RustEventListener {
     id: string;
     listenTarget: string;
     eventType: string;
     matchers: EventMatcher[];
-    msg: SubscriptionMsg<T>;
+    msg: SubscriptionMsg;
     propagation: EventPropagation;
 }
 
@@ -236,7 +236,7 @@ interface FileInfo {
     lastModified: number;
 }
 
-export {
+export type {
     Page,
     Model,
     Msg,
@@ -255,7 +255,7 @@ export {
     SessionStorageEffect,
     StorageGetItem,
     StorageSetItem,
-    MessageWithEffect,
+    EffectfulMsg,
     PureMsg,
     SubscriptionMsg,
     DomEffect,

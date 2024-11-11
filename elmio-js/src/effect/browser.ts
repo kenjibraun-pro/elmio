@@ -1,6 +1,6 @@
-import { Browser } from "../browser";
-import { Domain, Logger } from "../logger";
-import { BrowserEffect, SetTimeoutConfig } from "../rust/types";
+import type { Browser } from "../browser";
+import { Domain, type Logger } from "../logger";
+import type { BrowserEffect, SetTimeoutConfig } from "../rust/types";
 
 export class BrowserEffectHandler {
     constructor(

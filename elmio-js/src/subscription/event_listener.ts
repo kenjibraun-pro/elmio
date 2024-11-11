@@ -1,38 +1,38 @@
-import { AbortFn, Browser, listenTargetFromString } from "../browser";
-import { Domain, Logger, Verbosity } from "../logger";
 import { deepEqual } from "fast-equals";
+import { type AbortFn, type Browser, listenTargetFromString } from "../browser";
+import { Domain, type Logger, Verbosity } from "../logger";
 
-import {
+import type {
     ClosestSelectorMatcher,
     EventMatcher,
     ExactSelectorMatcher,
     KeyboardKeyMatcher,
+    MouseButtonMatcher,
     RustEventListener,
     SubscriptionMsg,
-    MouseButtonMatcher,
 } from "../rust/types";
 
-export interface ActiveEventListener<T> {
+export interface ActiveEventListener {
     abort: AbortFn;
-    listener: RustEventListener<T>;
+    listener: RustEventListener;
 }
 
-interface State<T> {
-    eventListeners: ActiveEventListener<T>[];
+interface State {
+    eventListeners: ActiveEventListener[];
 }
 
-export class EventListenerManager<T> {
-    private readonly state: State<T> = {
+export class EventListenerManager {
+    private readonly state: State = {
         eventListeners: [],
     };
 
     constructor(
         private readonly browser: Browser,
         private readonly logger: Logger,
-        private readonly onMsg: (msg: SubscriptionMsg<T>, event: Event) => void,
+        private readonly onMsg: (msg: SubscriptionMsg, event: Event) => void,
     ) {}
 
-    public setEventListeners(newListeners: RustEventListener<T>[]) {
+    public setEventListeners(newListeners: RustEventListener[]) {
         const oldListeners = [...this.state.eventListeners];
 
         const { listenersToRemove, listenersToKeep, listenersToAdd } = prepareEventListenersDelta(
@@ -58,7 +58,7 @@ export class EventListenerManager<T> {
         this.state.eventListeners = [...listenersToKeep, ...addedListeners];
     }
 
-    private startEventListener(listener: RustEventListener<T>): ActiveEventListener<T> {
+    private startEventListener(listener: RustEventListener): ActiveEventListener {
         const listenTarget = listenTargetFromString(listener.listenTarget);
 
         const abort = this.browser.addEventListener(
@@ -90,24 +90,27 @@ export class EventListenerManager<T> {
         };
     }
 
-    private stopEventListeners(listeners: ActiveEventListener<T>[]) {
-        listeners.forEach((listener) => {
-            listener.abort.abort();
+    private stopEventListeners(listeners: ActiveEventListener[]) {
+        for (const {
+            abort: { abort },
+            listener,
+        } of listeners) {
+            abort();
 
             this.logger.debug({
                 domain: Domain.EventListener,
                 verbosity: Verbosity.Verbose,
                 message: "Stopped event listener",
                 context: {
-                    id: listener.listener.id,
-                    eventType: listener.listener.eventType,
-                    target: listener.listener.listenTarget,
+                    id: listener.id,
+                    eventType: listener.eventType,
+                    target: listener.listenTarget,
                 },
             });
-        });
+        }
     }
 
-    private handleEvent(event: Event, listener: RustEventListener<T>): void {
+    private handleEvent(event: Event, listener: RustEventListener): void {
         const matchesEvent = listener.matchers.every((matcher) => {
             return this.matchEvent(matcher, event);
         });
@@ -203,7 +206,7 @@ export class EventListenerManager<T> {
             return false;
         }
 
-        return matcher.button == mouseButtonToString(e.button);
+        return matcher.button === mouseButtonToString(e.button);
     }
 
     private matchKeyboardKey(matcher: KeyboardKeyMatcher, event: Event): boolean {
@@ -227,41 +230,39 @@ export class EventListenerManager<T> {
     }
 }
 
-interface EventListenersDelta<T> {
-    listenersToRemove: ActiveEventListener<T>[];
-    listenersToKeep: ActiveEventListener<T>[];
-    listenersToAdd: RustEventListener<T>[];
+interface EventListenersDelta {
+    listenersToRemove: ActiveEventListener[];
+    listenersToKeep: ActiveEventListener[];
+    listenersToAdd: RustEventListener[];
 }
 
-function prepareEventListenersDelta<T>(
-    oldListeners: ActiveEventListener<T>[],
-    newListeners: RustEventListener<T>[],
-): EventListenersDelta<T> {
-    const listenersToRemove: ActiveEventListener<T>[] = [];
-    const listenersToKeep: ActiveEventListener<T>[] = [];
-    const listenersToAdd: RustEventListener<T>[] = [];
+function prepareEventListenersDelta(
+    oldListeners: ActiveEventListener[],
+    newListeners: RustEventListener[],
+): EventListenersDelta {
+    const listenersToRemove: ActiveEventListener[] = [];
+    const listenersToKeep: ActiveEventListener[] = [];
+    const listenersToAdd: RustEventListener[] = [];
 
     const newListenerById = new Map(newListeners.map((listener) => [listener.id, listener]));
 
-    oldListeners.forEach((listener) => {
-        let newListener = newListenerById.get(listener.listener.id);
+    for (const oldListener of oldListeners) {
+        const newListener = newListenerById.get(oldListener.listener.id);
 
-        if (newListener && hasSameMsg(listener.listener, newListener)) {
-            listenersToKeep.push(listener);
+        if (newListener && hasSameMsg(oldListener.listener, newListener)) {
+            listenersToKeep.push(oldListener);
         } else {
-            listenersToRemove.push(listener);
+            listenersToRemove.push(oldListener);
         }
-    });
+    }
 
     const oldListenerById = new Map(listenersToKeep.map(({ listener }) => [listener.id, listener]));
 
-    newListeners.forEach((listener) => {
-        let oldListener = oldListenerById.get(listener.id);
-
-        if (!oldListener) {
+    for (const listener of newListeners) {
+        if (!oldListenerById.has(listener.id)) {
             listenersToAdd.push(listener);
         }
-    });
+    }
 
     return {
         listenersToRemove,
@@ -270,7 +271,7 @@ function prepareEventListenersDelta<T>(
     };
 }
 
-function hasSameMsg<T>(a: RustEventListener<T>, b: RustEventListener<T>): boolean {
+function hasSameMsg(a: RustEventListener, b: RustEventListener): boolean {
     return deepEqual(a.msg.config, b.msg.config);
 }
 

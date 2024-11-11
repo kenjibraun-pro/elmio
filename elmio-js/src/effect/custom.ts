@@ -1,16 +1,16 @@
-import { Domain, Logger, Verbosity } from "../logger";
+import { Domain, type Logger, Verbosity } from "../logger";
 
-interface State<T> {
-    handler: ((effect: T) => T) | null;
-    effectBacklog: T[];
+interface State {
+    handler: ((effect: unknown) => unknown) | null;
+    effectBacklog: unknown[];
 }
 
 export interface Config {
     useBacklog: boolean;
 }
 
-export class CustomEffectHandler<T> {
-    private readonly state: State<T> = {
+export class CustomEffectHandler {
+    private readonly state: State = {
         handler: null,
         effectBacklog: [],
     };
@@ -20,20 +20,20 @@ export class CustomEffectHandler<T> {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: T): Promise<T> {
+    public handle(effect: unknown): Promise<unknown> {
         if (this.state.handler) {
             const result = this.safeHandle(this.state.handler, effect) ?? effect;
             return Promise.resolve(result);
-        } else {
-            if (this.config.useBacklog) {
-                this.addToBacklog(effect);
-            }
+        }
+
+        if (this.config.useBacklog) {
+            this.addToBacklog(effect);
         }
 
         return Promise.resolve(effect);
     }
 
-    public setHandler(handler: (effect: T) => T): void {
+    public setHandler(handler: (effect: unknown) => unknown): void {
         this.state.handler = handler;
 
         if (this.state.effectBacklog.length > 0) {
@@ -41,7 +41,7 @@ export class CustomEffectHandler<T> {
         }
     }
 
-    private addToBacklog(effect: T): void {
+    private addToBacklog(effect: unknown): void {
         if (this.state.effectBacklog.length < 100) {
             this.state.effectBacklog.push(effect);
 
@@ -62,7 +62,7 @@ export class CustomEffectHandler<T> {
         }
     }
 
-    private handleBacklog(handler: (effect: T) => T): void {
+    private handleBacklog(handler: (effect: unknown) => unknown): void {
         this.logger.debug({
             domain: Domain.CustomEffect,
             verbosity: Verbosity.Normal,
@@ -75,12 +75,15 @@ export class CustomEffectHandler<T> {
         const effects = [...this.state.effectBacklog];
         this.state.effectBacklog = [];
 
-        effects.forEach((effect) => {
+        for (const effect of effects) {
             this.safeHandle(handler, effect);
-        });
+        }
     }
 
-    private safeHandle(handler: (effect: T) => T, effect: T): T | undefined {
+    private safeHandle(
+        handler: (effect: unknown) => unknown,
+        effect: unknown,
+    ): unknown | undefined {
         try {
             return handler(effect);
         } catch (error) {

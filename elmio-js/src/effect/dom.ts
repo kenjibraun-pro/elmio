@@ -1,18 +1,18 @@
-import { Browser } from "../browser";
-import { Domain, Logger, Verbosity } from "../logger";
-import { Window, WindowSize } from "../browser/window";
-import {
-    DomEffect,
-    GetTargetDataValue,
-    GetElementValue,
-    GetRadioGroupValue,
-    FocusElement,
-    SelectInputText,
+import type { Browser } from "../browser";
+import type { Window, WindowSize } from "../browser/window";
+import { Domain, type Logger, Verbosity } from "../logger";
+import type {
     DispatchEvent,
-    GetFiles,
+    DomEffect,
     FileInfo,
+    FocusElement,
+    GetElementValue,
+    GetFiles,
+    GetRadioGroupValue,
+    GetTargetDataValue,
+    SelectInputText,
 } from "../rust/types";
-import JsonHelper from "../utils/json";
+import type JsonHelper from "../utils/json";
 
 type HandleReturnType =
     | { type: "dispatchEvent"; result: void }
@@ -35,18 +35,20 @@ export class DomEffectHandler {
 
     public handle(effect: DomEffect, sourceEvent: Event | null): Promise<HandleReturnType> {
         switch (effect.type) {
-            case "dispatchEvent":
+            case "dispatchEvent": {
                 const dispatchResult = this.dispatchEvent(effect.config as DispatchEvent);
                 return Promise.resolve({ type: "dispatchEvent", result: dispatchResult });
+            }
 
-            case "focusElement":
+            case "focusElement": {
                 const focusResult = this.focusElement(effect.config as FocusElement);
                 return Promise.resolve({
                     type: "focusElement",
                     result: focusResult,
                 });
+            }
 
-            case "selectInputText":
+            case "selectInputText": {
                 const selectInputTextResult = this.selectInputText(
                     effect.config as SelectInputText,
                 );
@@ -54,15 +56,17 @@ export class DomEffectHandler {
                     type: "selectInputText",
                     result: selectInputTextResult,
                 });
+            }
 
-            case "getWindowSize":
+            case "getWindowSize": {
                 const getWindowSizeResult = this.getWindowSize();
                 return Promise.resolve({
                     type: "getWindowSize",
                     result: getWindowSizeResult,
                 });
+            }
 
-            case "getElementValue":
+            case "getElementValue": {
                 const getElementValueResult = this.getElementValue(
                     effect.config as GetElementValue,
                 );
@@ -70,8 +74,9 @@ export class DomEffectHandler {
                     type: "getElementValue",
                     result: getElementValueResult,
                 });
+            }
 
-            case "getRadioGroupValue":
+            case "getRadioGroupValue": {
                 const getRadioGroupValueResult = this.getRadioGroupValue(
                     effect.config as GetRadioGroupValue,
                 );
@@ -79,15 +84,17 @@ export class DomEffectHandler {
                     type: "getRadioGroupValue",
                     result: getRadioGroupValueResult,
                 });
+            }
 
-            case "getFiles":
+            case "getFiles": {
                 const getFilesResult = this.getFiles(effect.config as GetFiles);
                 return Promise.resolve({
                     type: "getFiles",
                     result: getFilesResult,
                 });
+            }
 
-            case "getTargetDataValue":
+            case "getTargetDataValue": {
                 const getTargetDataValueResult = this.getTargetDataValue(
                     effect.config as GetTargetDataValue,
                     sourceEvent,
@@ -96,6 +103,7 @@ export class DomEffectHandler {
                     type: "getTargetDataValue",
                     result: getTargetDataValueResult,
                 });
+            }
 
             default:
                 this.logger.warn({

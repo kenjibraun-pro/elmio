@@ -1,28 +1,28 @@
-import { AbortFn, Browser } from "../browser";
-import { Domain, Logger, Verbosity } from "../logger";
-import { RustInterval, SubscriptionMsg } from "../rust/types";
+import type { AbortFn, Browser } from "../browser";
+import { Domain, type Logger, Verbosity } from "../logger";
+import type { RustInterval, SubscriptionMsg } from "../rust/types";
 
-export interface ActiveInterval<T> {
+export interface ActiveInterval {
     abort: AbortFn;
-    interval: RustInterval<T>;
+    interval: RustInterval;
 }
 
-interface State<T> {
-    intervals: ActiveInterval<T>[];
+interface State {
+    intervals: ActiveInterval[];
 }
 
-export class IntervalManager<T> {
-    private readonly state: State<T> = {
+export class IntervalManager {
+    private readonly state: State = {
         intervals: [],
     };
 
     constructor(
         private readonly browser: Browser,
         private readonly logger: Logger,
-        private readonly onMsg: (msg: SubscriptionMsg<T>) => void,
+        private readonly onMsg: (msg: SubscriptionMsg) => void,
     ) {}
 
-    public setIntervals(newIntervals: RustInterval<T>[]) {
+    public setIntervals(newIntervals: RustInterval[]) {
         const oldIntervals = [...this.state.intervals];
 
         const { intervalsToRemove, intervalsToKeep, intervalsToAdd } = prepareIntervalsDelta(
@@ -48,7 +48,7 @@ export class IntervalManager<T> {
         this.state.intervals = [...intervalsToKeep, ...addedIntervals];
     }
 
-    private startInterval(interval: RustInterval<T>): ActiveInterval<T> {
+    private startInterval(interval: RustInterval): ActiveInterval {
         const abort = this.browser.setInterval(() => {
             this.onMsg(interval.msg);
         }, interval.duration);
@@ -69,10 +69,9 @@ export class IntervalManager<T> {
         };
     }
 
-    private stopIntervals(intervals: ActiveInterval<T>[]) {
-        intervals.forEach((interval) => {
+    private stopIntervals(intervals: ActiveInterval[]) {
+        for (const interval of intervals) {
             interval.abort.abort();
-
             this.logger.debug({
                 domain: Domain.Interval,
                 verbosity: Verbosity.Verbose,
@@ -82,40 +81,40 @@ export class IntervalManager<T> {
                     duration: interval.interval.duration,
                 },
             });
-        });
+        }
     }
 }
 
-interface IntervalsDelta<T> {
-    intervalsToRemove: ActiveInterval<T>[];
-    intervalsToKeep: ActiveInterval<T>[];
-    intervalsToAdd: RustInterval<T>[];
+interface IntervalsDelta {
+    intervalsToRemove: ActiveInterval[];
+    intervalsToKeep: ActiveInterval[];
+    intervalsToAdd: RustInterval[];
 }
 
-function prepareIntervalsDelta<T>(
-    oldListeners: ActiveInterval<T>[],
-    newListeners: RustInterval<T>[],
-): IntervalsDelta<T> {
+function prepareIntervalsDelta(
+    oldListeners: ActiveInterval[],
+    newListeners: RustInterval[],
+): IntervalsDelta {
     const newIds = newListeners.map((interval) => interval.id);
     const oldIds = oldListeners.map((interval) => interval.interval.id);
 
-    const intervalsToRemove: ActiveInterval<T>[] = [];
-    const intervalsToKeep: ActiveInterval<T>[] = [];
-    const intervalsToAdd: RustInterval<T>[] = [];
+    const intervalsToRemove: ActiveInterval[] = [];
+    const intervalsToKeep: ActiveInterval[] = [];
+    const intervalsToAdd: RustInterval[] = [];
 
-    oldListeners.forEach((interval) => {
+    for (const interval of oldListeners) {
         if (newIds.includes(interval.interval.id)) {
             intervalsToKeep.push(interval);
         } else {
             intervalsToRemove.push(interval);
         }
-    });
+    }
 
-    newListeners.forEach((interval) => {
+    for (const interval of newListeners) {
         if (!oldIds.includes(interval.id)) {
             intervalsToAdd.push(interval);
         }
-    });
+    }
 
     return {
         intervalsToRemove,

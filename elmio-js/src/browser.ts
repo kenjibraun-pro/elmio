@@ -1,4 +1,4 @@
-import { EventTarget, EventTargetElement } from "./rust/types";
+import type { EventTarget, EventTargetElement } from "./rust/types";
 
 export interface Browser {
     getElementById(id: string): HTMLElement | null;
@@ -75,18 +75,19 @@ export class RealBrowser implements Browser {
                 document.dispatchEvent(event);
                 break;
 
-            case "element":
+            case "element": {
                 const config = eventTarget.config as EventTargetElement;
                 const element = document.getElementById(config.elementId);
                 element?.dispatchEvent(event);
                 break;
+            }
         }
     }
 }
 
 enum ListenTarget {
-    Window,
-    Document,
+    Window = 0,
+    Document = 1,
 }
 
 export function listenTargetFromString(str: string): ListenTarget {

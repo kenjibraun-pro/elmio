@@ -80,31 +80,31 @@ class BrowserLogger implements Logger {
 }
 
 enum Domain {
-    All,
-    Core,
-    Subscriptions,
-    EventListener,
-    Interval,
-    Effects,
-    Dom,
-    Time,
-    LocalStorage,
-    SessionStorage,
-    Navigation,
-    Console,
-    Clipboard,
-    Browser,
-    CustomEffect,
+    All = 0,
+    Core = 1,
+    Subscriptions = 2,
+    EventListener = 3,
+    Interval = 4,
+    Effects = 5,
+    Dom = 6,
+    Time = 7,
+    LocalStorage = 8,
+    SessionStorage = 9,
+    Navigation = 10,
+    Console = 11,
+    Clipboard = 12,
+    Browser = 13,
+    CustomEffect = 14,
 }
 
 enum DebugLogger {
-    Log,
-    Trace,
+    Log = 0,
+    Trace = 1,
 }
 
 enum Verbosity {
-    Normal,
-    Verbose,
+    Normal = 0,
+    Verbose = 1,
 }
 
 function defaultLoggerConfig(): Config {
@@ -140,11 +140,11 @@ function traceDebugConfig(): Config {
 }
 
 export {
-    Logger,
+    type Logger,
     BrowserLogger,
     Domain,
     DebugLogger,
-    Config,
+    type Config,
     Verbosity,
     defaultLoggerConfig,
     defaultDebugConfig,

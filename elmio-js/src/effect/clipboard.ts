@@ -1,6 +1,6 @@
-import { Clipboard } from "../browser/clipboard";
-import { Domain, Logger } from "../logger";
-import { ClipboardEffect, WriteText, WriteTextResult } from "../rust/types";
+import type { Clipboard } from "../browser/clipboard";
+import { Domain, type Logger } from "../logger";
+import type { ClipboardEffect, WriteText, WriteTextResult } from "../rust/types";
 
 export class ClipboardEffectHandler {
     constructor(

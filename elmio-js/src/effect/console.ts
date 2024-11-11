@@ -1,6 +1,6 @@
-import { Console } from "../browser/console";
-import { Domain, Logger } from "../logger";
-import { ConsoleEffect, Log } from "../rust/types";
+import type { Console } from "../browser/console";
+import { Domain, type Logger } from "../logger";
+import type { ConsoleEffect, Log } from "../rust/types";
 
 export class ConsoleEffectHandler {
     constructor(
@@ -12,6 +12,7 @@ export class ConsoleEffectHandler {
         switch (effect.type) {
             case "log":
                 this.log(effect.config);
+                break;
             default:
                 this.logger.warn({
                     domain: Domain.Console,

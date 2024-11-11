@@ -1,12 +1,12 @@
-import { History } from "../browser/history";
-import { LocationInterface } from "../browser/location";
-import { Domain, Logger } from "../logger";
-import { NavigationEffect } from "../rust/types";
+import type { History } from "../browser/history";
+import type { Location } from "../browser/location";
+import { Domain, type Logger } from "../logger";
+import type { NavigationEffect } from "../rust/types";
 
 export class NavigationEffectHandler {
     constructor(
         private readonly history: History,
-        private readonly location: LocationInterface,
+        private readonly location: Location,
         private readonly logger: Logger,
     ) {}
 

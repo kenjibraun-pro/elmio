@@ -1,19 +1,20 @@
-import { Date } from "../browser/date";
-import { Domain, Logger } from "../logger";
-import { TimeEffect } from "../rust/types";
-import { Posix, posixFromMilliseconds } from "../utils/time";
+import type { IDate } from "../browser/date";
+import { Domain, type Logger } from "../logger";
+import type { TimeEffect } from "../rust/types";
+import { type Posix, posixFromMilliseconds } from "../utils/time";
 
 export class TimeEffectHandler {
     constructor(
-        private readonly date: Date,
+        private readonly date: IDate,
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: TimeEffect<unknown>): Promise<Posix | void> {
+    public async handle(effect: TimeEffect): Promise<Posix | void> {
         switch (effect.type) {
-            case "currentTime":
+            case "currentTime": {
                 const result = this.currentTime();
                 return Promise.resolve(result);
+            }
 
             default:
                 this.logger.warn({

@@ -1,11 +1,11 @@
-interface LocationInterface {
+interface Location {
     assign(url: string): void;
 }
 
-class BrowserLocation implements LocationInterface {
+class BrowserLocation implements Location {
     public assign(url: string): void {
         location.assign(url);
     }
 }
 
-export { LocationInterface, BrowserLocation };
+export { type Location, BrowserLocation };
