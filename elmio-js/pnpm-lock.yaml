@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      fast-equals:
+        specifier: 5.0.1
+        version: 5.0.1
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -70,6 +74,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  fast-equals@5.0.1:
+    resolution: {integrity: sha512-WF1Wi8PwwSY7/6Kx0vKXtw8RwuSGoM1bvDaJbu7MxDlR1vovZjIAKrnzyrThgAjm6JDTu0fVgWXDlMGspodfoQ==}
+    engines: {node: '>=6.0.0'}
+
   typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
@@ -111,5 +119,7 @@ snapshots:
 
   '@biomejs/cli-win32-x64@1.9.4':
     optional: true
+
+  fast-equals@5.0.1: {}
 
   typescript@5.6.3: {}

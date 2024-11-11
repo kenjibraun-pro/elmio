@@ -20,5 +20,8 @@
         "node": ">=20.11.0",
         "yarn": "Please use pnpm",
         "npm": "Please use pnpm"
+    },
+    "dependencies": {
+        "fast-equals": "5.0.1"
     }
 }
