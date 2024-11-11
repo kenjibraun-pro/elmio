@@ -1,11 +1,11 @@
-import { IClipboard } from "../browser/clipboard";
+import { Clipboard } from "../browser/clipboard";
 import { Domain, Logger } from "../logger";
 import { ClipboardEffect, WriteText, WriteTextResult } from "../rust/types";
 
 export class ClipboardEffectHandler {
     constructor(
-        private readonly clipboard: IClipboard,
-        private readonly logger: Logger<ClipboardEffect | Error>,
+        private readonly clipboard: Clipboard,
+        private readonly logger: Logger,
     ) {}
 
     public async handle(effect: ClipboardEffect): Promise<WriteTextResult> {
