@@ -1,7 +1,7 @@
-interface Logger<T> {
-    warn(entry: LogEntry<T>): void;
-    error(entry: LogEntry<T>): void;
-    debug(entry: DebugEntry<T>): void;
+interface Logger {
+    warn(entry: LogEntry): void;
+    error(entry: LogEntry): void;
+    debug(entry: DebugEntry): void;
 }
 
 const PREFIX = "Elmio";
@@ -12,38 +12,38 @@ interface Config {
     debugVerbosity: Verbosity;
 }
 
-interface LogEntry<T> {
+interface LogEntry {
     domain: Domain;
     message: string;
-    context: T;
+    context: object;
 }
 
-interface DebugEntry<T> extends LogEntry<T> {
+interface DebugEntry extends LogEntry {
     verbosity: Verbosity;
 }
 
-class BrowserLogger<T> implements Logger<T> {
+class BrowserLogger implements Logger {
     constructor(private readonly config: Config) {}
 
-    public warn({ domain, message, context }: LogEntry<T>): void {
+    public warn({ domain, message, context }: LogEntry): void {
         console.warn(`[${PREFIX}:${Domain[domain]}]`, message, context);
     }
 
-    public error({ domain, message, context }: LogEntry<T>): void {
+    public error({ domain, message, context }: LogEntry): void {
         console.error(`[${PREFIX}:${Domain[domain]}]`, message, context);
     }
 
-    public debug({ domain, verbosity, message, context }: DebugEntry<T>): void {
+    public debug({ domain, verbosity, message, context }: DebugEntry): void {
         if (
             (this.validDomain(domain) && this.validVerbosity(verbosity)) ||
             this.hasGlobalOverride()
         ) {
-            const logger = this.getDebugLogger<string | T>();
+            const logger = this.getDebugLogger();
             logger(`[${PREFIX}:${Domain[domain]}]`, message, context);
         }
     }
 
-    private getDebugLogger<T>(): (...data: T[]) => void {
+    private getDebugLogger(): (...data: unknown[]) => void {
         switch (this.config.debugLogger) {
             case DebugLogger.Log:
                 return console.log;
