@@ -11,6 +11,9 @@ importers:
       fast-equals:
         specifier: 5.0.1
         version: 5.0.1
+      morphdom:
+        specifier: 2.7.4
+        version: 2.7.4
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -78,6 +81,9 @@ packages:
     resolution: {integrity: sha512-WF1Wi8PwwSY7/6Kx0vKXtw8RwuSGoM1bvDaJbu7MxDlR1vovZjIAKrnzyrThgAjm6JDTu0fVgWXDlMGspodfoQ==}
     engines: {node: '>=6.0.0'}
 
+  morphdom@2.7.4:
+    resolution: {integrity: sha512-ATTbWMgGa+FaMU3FhnFYB6WgulCqwf6opOll4CBzmVDTLvPMmUPrEv8CudmLPK0MESa64+6B89fWOxP3+YIlxQ==}
+
   typescript@5.6.3:
     resolution: {integrity: sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==}
     engines: {node: '>=14.17'}
@@ -121,5 +127,7 @@ snapshots:
     optional: true
 
   fast-equals@5.0.1: {}
+
+  morphdom@2.7.4: {}
 
   typescript@5.6.3: {}

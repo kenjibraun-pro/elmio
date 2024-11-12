@@ -2,11 +2,12 @@
     "name": "elmio-js",
     "version": "1.0.0",
     "description": "The Javascript runtime counterpart for elmio-rs. Uses morphdom to partially update the DOM.",
-    "main": "src/main.js",
+    "main": "src/index.ts",
     "type": "module",
     "scripts": {
         "fmt": "biome format --write .",
-        "check": "biome check --write ."
+        "check": "biome check --write .",
+        "fix": "biome check --fix ."
     },
     "keywords": ["morphdom", "javascript-runtime", "web-framework", "DOM"],
     "author": "Success Kingsley <hello@xosnrdev.tech>",
@@ -22,6 +23,7 @@
         "npm": "Please use pnpm"
     },
     "dependencies": {
-        "fast-equals": "5.0.1"
+        "fast-equals": "5.0.1",
+        "morphdom": "2.7.4"
     }
 }
