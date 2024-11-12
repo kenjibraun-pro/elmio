@@ -1,30 +1,29 @@
-interface EnumValue<T> {
-    [key: string]: T;
-}
+export const rustEnum = {
+    withoutValue(name: string) {
+        return name;
+    },
 
-function createEnumWithoutValue<T extends string>(name: T): T {
-    return name;
-}
+    tupleWithoutValue(name: string) {
+        return { [name]: [] };
+    },
 
-function createTupleEnumWithoutValue<T extends string>(name: T): EnumValue<T[]> {
-    return { [name]: [] };
-}
+    tuple(name: string, values: string[]) {
+        if (values.length === 0) {
+            this.tupleWithoutValue(name);
+        }
 
-function createTupleEnum<T extends string, V>(name: T, values: V[]): EnumValue<V | V[]> {
-    return { [name]: values.length === 1 ? values[0] : values };
-}
+        if (values.length === 1) {
+            return { [name]: values[0] };
+        }
 
-function createObjectEnum<T extends string, V extends object>(name: T, value: V): EnumValue<V> {
-    if (typeof value !== "object" || value === null) {
-        throw new TypeError("Values must be an object");
-    }
+        return { [name]: values };
+    },
 
-    return { [name]: value };
-}
+    object(name: string, value: object) {
+        if (typeof value !== "object") {
+            throw new Error("Value must be an object");
+        }
 
-export default {
-    withoutValue: createEnumWithoutValue,
-    tupleWithoutValue: createTupleEnumWithoutValue,
-    tuple: createTupleEnum,
-    object: createObjectEnum,
+        return { [name]: value };
+    },
 };

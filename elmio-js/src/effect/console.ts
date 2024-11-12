@@ -8,7 +8,7 @@ export class ConsoleEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: ConsoleEffect): Promise<void> {
+    public async handle(effect: ConsoleEffect): Promise<void> {
         switch (effect.type) {
             case "log":
                 this.log(effect.config);
@@ -20,8 +20,6 @@ export class ConsoleEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private log(config: Log): void {

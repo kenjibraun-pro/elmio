@@ -43,7 +43,7 @@ class BrowserLogger implements Logger {
         }
     }
 
-    private getDebugLogger(): (...data: unknown[]) => void {
+    private getDebugLogger(): (...data: any[]) => void {
         switch (this.config.debugLogger) {
             case DebugLogger.Log:
                 return console.log;

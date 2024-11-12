@@ -1,8 +1,8 @@
 import { Domain, type Logger, Verbosity } from "../logger";
 
 interface State {
-    handler: ((effect: unknown) => unknown) | null;
-    effectBacklog: unknown[];
+    handler: ((effect: any) => any) | null;
+    effectBacklog: any[];
 }
 
 export interface Config {
@@ -20,20 +20,17 @@ export class CustomEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: unknown): Promise<unknown> {
+    public async handle(effect: any): Promise<any> {
         if (this.state.handler) {
-            const result = this.safeHandle(this.state.handler, effect) ?? effect;
-            return Promise.resolve(result);
+            return this.safeHandle(this.state.handler, effect) ?? effect;
         }
 
         if (this.config.useBacklog) {
             this.addToBacklog(effect);
         }
-
-        return Promise.resolve(effect);
     }
 
-    public setHandler(handler: (effect: unknown) => unknown): void {
+    public setHandler(handler: (effect: any) => any): void {
         this.state.handler = handler;
 
         if (this.state.effectBacklog.length > 0) {
@@ -41,7 +38,7 @@ export class CustomEffectHandler {
         }
     }
 
-    private addToBacklog(effect: unknown): void {
+    private addToBacklog(effect: any): void {
         if (this.state.effectBacklog.length < 100) {
             this.state.effectBacklog.push(effect);
 
@@ -62,7 +59,7 @@ export class CustomEffectHandler {
         }
     }
 
-    private handleBacklog(handler: (effect: unknown) => unknown): void {
+    private handleBacklog(handler: (effect: any) => any): void {
         this.logger.debug({
             domain: Domain.CustomEffect,
             verbosity: Verbosity.Normal,
@@ -80,10 +77,7 @@ export class CustomEffectHandler {
         }
     }
 
-    private safeHandle(
-        handler: (effect: unknown) => unknown,
-        effect: unknown,
-    ): unknown | undefined {
+    private safeHandle(handler: (effect: any) => any, effect: any): any | undefined {
         try {
             return handler(effect);
         } catch (error) {

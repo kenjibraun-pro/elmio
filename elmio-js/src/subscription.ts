@@ -1,12 +1,12 @@
-import { Browser } from "./browser";
-import { Domain, Logger, Verbosity } from "./logger";
-import {
-    Subscription,
+import type { Browser } from "./browser";
+import { Domain, type Logger, Verbosity } from "./logger";
+import type {
+    EffectfulMsg,
+    Msg,
     RustEventListener,
     RustInterval,
-    Msg,
+    Subscription,
     SubscriptionMsg,
-    EffectfulMsg,
 } from "./rust/types";
 import { EventListenerManager } from "./subscription/event_listener";
 import { IntervalManager } from "./subscription/interval";

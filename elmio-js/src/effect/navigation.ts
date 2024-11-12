@@ -10,19 +10,16 @@ export class NavigationEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: NavigationEffect): Promise<void> {
+    public async handle(effect: NavigationEffect) {
         switch (effect.type) {
             case "pushUrl":
-                this.pushUrl(effect.config);
-                break;
+                return this.pushUrl(effect.config);
 
             case "replaceUrl":
-                this.replaceUrl(effect.config);
-                break;
+                return this.replaceUrl(effect.config);
 
             case "setLocation":
-                this.setLocation(effect.config);
-                break;
+                return this.setLocation(effect.config);
 
             default:
                 this.logger.warn({
@@ -31,8 +28,6 @@ export class NavigationEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private pushUrl(url: string): void {

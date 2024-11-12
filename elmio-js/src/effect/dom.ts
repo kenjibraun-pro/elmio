@@ -14,17 +14,6 @@ import type {
 } from "../rust/types";
 import type JsonHelper from "../utils/json";
 
-type HandleReturnType =
-    | { type: "dispatchEvent"; result: void }
-    | { type: "focusElement"; result: void }
-    | { type: "selectInputText"; result: void }
-    | { type: "getWindowSize"; result: WindowSize }
-    | { type: "getElementValue"; result: string | null }
-    | { type: "getRadioGroupValue"; result: string | null }
-    | { type: "getFiles"; result: FileInfo[] | null }
-    | { type: "getTargetDataValue"; result: string | null }
-    | void;
-
 export class DomEffectHandler {
     constructor(
         private readonly browser: Browser,
@@ -33,76 +22,38 @@ export class DomEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: DomEffect, sourceEvent: Event | null): Promise<HandleReturnType> {
+    public async handle(effect: DomEffect, sourceEvent: Event | null) {
         switch (effect.type) {
             case "dispatchEvent": {
-                const dispatchResult = this.dispatchEvent(effect.config as DispatchEvent);
-                return Promise.resolve({ type: "dispatchEvent", result: dispatchResult });
+                return this.dispatchEvent(effect.config as DispatchEvent);
             }
 
             case "focusElement": {
-                const focusResult = this.focusElement(effect.config as FocusElement);
-                return Promise.resolve({
-                    type: "focusElement",
-                    result: focusResult,
-                });
+                return this.focusElement(effect.config as FocusElement);
             }
 
             case "selectInputText": {
-                const selectInputTextResult = this.selectInputText(
-                    effect.config as SelectInputText,
-                );
-                return Promise.resolve({
-                    type: "selectInputText",
-                    result: selectInputTextResult,
-                });
+                return this.selectInputText(effect.config as SelectInputText);
             }
 
             case "getWindowSize": {
-                const getWindowSizeResult = this.getWindowSize();
-                return Promise.resolve({
-                    type: "getWindowSize",
-                    result: getWindowSizeResult,
-                });
+                return this.getWindowSize();
             }
 
             case "getElementValue": {
-                const getElementValueResult = this.getElementValue(
-                    effect.config as GetElementValue,
-                );
-                return Promise.resolve({
-                    type: "getElementValue",
-                    result: getElementValueResult,
-                });
+                return this.getElementValue(effect.config as GetElementValue);
             }
 
             case "getRadioGroupValue": {
-                const getRadioGroupValueResult = this.getRadioGroupValue(
-                    effect.config as GetRadioGroupValue,
-                );
-                return Promise.resolve({
-                    type: "getRadioGroupValue",
-                    result: getRadioGroupValueResult,
-                });
+                return this.getRadioGroupValue(effect.config as GetRadioGroupValue);
             }
 
             case "getFiles": {
-                const getFilesResult = this.getFiles(effect.config as GetFiles);
-                return Promise.resolve({
-                    type: "getFiles",
-                    result: getFilesResult,
-                });
+                return this.getFiles(effect.config as GetFiles);
             }
 
             case "getTargetDataValue": {
-                const getTargetDataValueResult = this.getTargetDataValue(
-                    effect.config as GetTargetDataValue,
-                    sourceEvent,
-                );
-                return Promise.resolve({
-                    type: "getTargetDataValue",
-                    result: getTargetDataValueResult,
-                });
+                return this.getTargetDataValue(effect.config as GetTargetDataValue, sourceEvent);
             }
 
             default:
@@ -112,8 +63,6 @@ export class DomEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private dispatchEvent(config: DispatchEvent): void {

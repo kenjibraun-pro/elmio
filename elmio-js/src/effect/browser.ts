@@ -8,10 +8,12 @@ export class BrowserEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: BrowserEffect): Promise<void> {
+    public async handle(effect: BrowserEffect): Promise<void> {
         switch (effect.type) {
-            case "setTimeout":
-                return this.setTimeout(effect.config as SetTimeoutConfig);
+            case "setTimeout": {
+                await this.setTimeout(effect.config as SetTimeoutConfig);
+                break;
+            }
 
             default:
                 this.logger.warn({
@@ -20,8 +22,6 @@ export class BrowserEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private setTimeout(config: SetTimeoutConfig): Promise<void> {

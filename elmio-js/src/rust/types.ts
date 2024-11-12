@@ -1,28 +1,28 @@
-type Model<T> = T;
+type Model = any;
 
 type Msg = PureMsg | EffectfulMsg;
 
 interface PureMsg {
-    msg: unknown;
+    msg: any;
 }
 
 interface SubscriptionMsg {
     type: string;
-    config: EffectfulMsg | unknown;
+    config: EffectfulMsg | any;
 }
 
-interface Page<T> {
+interface Page {
     id(): string;
-    init(): Model<T>;
-    update(msg: Msg, model: Model<T>): Model<T>;
-    updateFromJs(msg: JsMsg<T>, model: Model<T>): Model<T>;
-    getSubscriptions(model: Model<T>): Subscription[];
-    viewBody(model: Model<T>): string;
+    init(): Model;
+    update(msg: Msg, model: Model): Model;
+    updateFromJs(msg: JsMsg, model: Model): Model;
+    getSubscriptions(model: Model): Subscription[];
+    viewBody(model: Model): string;
 }
 
-interface JsMsg<T> {
+interface JsMsg {
     type: string;
-    data: T;
+    data: any;
 }
 
 interface Effect {
@@ -80,7 +80,7 @@ interface SetTimeoutConfig {
 
 interface TimeEffect {
     type: string;
-    config: unknown;
+    config: any;
 }
 
 interface DispatchEvent {
@@ -169,7 +169,7 @@ interface StorageSetItem {
 }
 
 interface EffectfulMsg {
-    msg: unknown;
+    msg: any;
     effect: Effect;
     // TODO: remove sourceEvent, the event is populated from js (not rust)
     sourceEvent: Event | null;

@@ -9,11 +9,10 @@ export class TimeEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public async handle(effect: TimeEffect): Promise<Posix | void> {
+    public async handle(effect: TimeEffect) {
         switch (effect.type) {
             case "currentTime": {
-                const result = this.currentTime();
-                return Promise.resolve(result);
+                return this.currentTime();
             }
 
             default:
@@ -23,8 +22,6 @@ export class TimeEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private currentTime(): Posix {

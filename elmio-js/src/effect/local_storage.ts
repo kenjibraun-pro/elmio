@@ -3,11 +3,6 @@ import { Domain, type Logger, Verbosity } from "../logger";
 import type { LocalStorageEffect, StorageGetItem, StorageSetItem } from "../rust/types";
 import type JsonHelper from "../utils/json";
 
-type HandleReturnType =
-    | { type: "getItem"; result: string | null }
-    | { type: "setItem"; result: boolean }
-    | void;
-
 export class LocalStorageEffectHandler {
     constructor(
         private readonly localStorage: LocalStorage,
@@ -15,22 +10,14 @@ export class LocalStorageEffectHandler {
         private readonly logger: Logger,
     ) {}
 
-    public handle(effect: LocalStorageEffect): Promise<HandleReturnType> {
+    public async handle(effect: LocalStorageEffect) {
         switch (effect.type) {
             case "getItem": {
-                const getItemResult = this.handleGetItem(effect.config as StorageGetItem);
-                return Promise.resolve({
-                    type: "getItem",
-                    result: getItemResult,
-                });
+                return this.handleGetItem(effect.config as StorageGetItem);
             }
 
             case "setItem": {
-                const setItemResult = this.handleSetItem(effect.config as StorageSetItem);
-                return Promise.resolve({
-                    type: "setItem",
-                    result: setItemResult,
-                });
+                return this.handleSetItem(effect.config as StorageSetItem);
             }
 
             default:
@@ -40,8 +27,6 @@ export class LocalStorageEffectHandler {
                     context: { type: effect.type },
                 });
         }
-
-        return Promise.resolve();
     }
 
     private handleGetItem({ key }: StorageGetItem): string | null {

@@ -4,35 +4,43 @@ import type { ClipboardEffect, WriteText, WriteTextResult } from "../rust/types"
 
 export class ClipboardEffectHandler {
     constructor(
-        private readonly clipboard: Clipboard,
+        private readonly console: Clipboard,
         private readonly logger: Logger,
     ) {}
 
-    public async handle(effect: ClipboardEffect): Promise<WriteTextResult> {
+    public async handle(effect: ClipboardEffect): Promise<WriteTextResult | undefined> {
         switch (effect.type) {
             case "writeText":
-                return this.handleWriteText(effect.config as WriteText);
+                return this.writeText(effect.config as WriteText);
+
             default:
                 this.logger.warn({
                     domain: Domain.Clipboard,
-                    message: `Unknown clipboard effect type: ${effect.type}`,
-                    context: effect,
+                    message: `Unknown effect type: ${effect.type}`,
+                    context: { type: effect.type },
                 });
-                return { success: false, error: `Unknown effect type: ${effect.type}` };
         }
     }
 
-    private async handleWriteText(config: WriteText): Promise<WriteTextResult> {
+    private writeText(config: WriteText): WriteTextResult {
         try {
-            this.clipboard.writeText(config.text);
-            return { success: true, error: null };
-        } catch (error) {
+            this.console.writeText(config.text);
+
+            return {
+                success: true,
+                error: null,
+            };
+        } catch (e) {
             this.logger.error({
                 domain: Domain.Clipboard,
                 message: "Failed to write text to clipboard",
-                context: error as Error,
+                context: { error: e },
             });
-            return { success: false, error: (error as Error).message };
+
+            return {
+                success: false,
+                error: (e as Error).message,
+            };
         }
     }
 }

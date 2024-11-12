@@ -138,7 +138,7 @@ export class EffectHandler {
         }
     }
 
-    public run(effect: Effect, sourceEvent: Event | null): Promise<unknown> {
+    public run(effect: Effect, sourceEvent: Event | null): Promise<any> {
         switch (effect.type) {
             case "none":
                 throw new Error("Cannot run 'none' effect");
@@ -184,7 +184,7 @@ export class EffectHandler {
         throw new Error(`Unknown effect type: ${effect.type}`);
     }
 
-    public setCustomEffectHandler(handler: (effect: unknown) => void) {
+    public setCustomEffectHandler(handler: (effect: any) => void) {
         this.customEffectHandler.setHandler(handler);
     }
 
@@ -201,7 +201,7 @@ interface GroupedEffects {
     navigationEffects: NavigationEffect[];
     localStorageEffects: LocalStorageEffect[];
     sessionStorageEffects: SessionStorageEffect[];
-    customEffects: unknown[];
+    customEffects: any[];
 }
 
 function groupEffects(effects: Effect[], logger: Logger): GroupedEffects {
