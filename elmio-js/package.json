@@ -7,7 +7,8 @@
     "scripts": {
         "fmt": "biome format --write .",
         "check": "biome check --write .",
-        "fix": "biome check --fix ."
+        "fix": "biome check --fix .",
+        "test": "vitest"
     },
     "keywords": ["morphdom", "javascript-runtime", "web-framework", "DOM"],
     "author": "Success Kingsley <hello@xosnrdev.tech>",
@@ -15,7 +16,9 @@
     "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
     "devDependencies": {
         "@biomejs/biome": "1.9.4",
-        "typescript": "5.6.3"
+        "happy-dom": "15.11.4",
+        "typescript": "5.6.3",
+        "vitest": "2.1.4"
     },
     "engines": {
         "node": ">=20.11.0",
