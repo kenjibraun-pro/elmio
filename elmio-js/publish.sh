@@ -13,6 +13,8 @@ main() {
 
     commit_and_push
 
+    npm login
+
     npm publish --access public --tag latest
 }
 
