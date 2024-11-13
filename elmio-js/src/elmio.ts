@@ -117,7 +117,7 @@ export class Elmio {
 
     private updateDom(markup: string) {
         morphdom(this.appElem, markup, {
-            onBeforeElUpdated(fromElem, toElem) {
+            onBeforeElUpdated(fromElem, _toElem) {
                 // Skip elements which has the unmanaged attribute
                 const isUnmanaged = fromElem.hasAttribute("unmanaged");
                 if (isUnmanaged) {
