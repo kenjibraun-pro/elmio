@@ -29,10 +29,6 @@ When an event is triggered, the `update` function is called with the current sta
 
 This function defines the event listeners, intervals, and other asynchronous tasks your application needs. It returns a declarative list of subscriptions as JSON.
 
-<!-- ## Usage
-
-To use Elmio in your project, you'll need to integrate the `elmio-rs` and `elmio-js` components. Refer to the individual package READMEs for detailed installation and usage instructions. -->
-
 ## Contributing
 
 Elmio is an open-source project, and contributions are welcome! If you encounter any issues or have ideas for improvements, please feel free to submit them via the project's issue tracker or open a pull request.
