@@ -3,6 +3,7 @@ pub mod build;
 pub mod cleaner;
 pub mod exec;
 pub mod file_util;
+pub mod project;
 pub mod project_info;
 pub mod rust_builder;
 pub mod script_runner;
