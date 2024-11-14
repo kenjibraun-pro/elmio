@@ -6,4 +6,5 @@ pub mod file_util;
 pub mod project_info;
 pub mod rust_builder;
 pub mod script_runner;
+pub mod serve;
 pub mod web_builder;
