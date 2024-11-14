@@ -95,7 +95,7 @@ fn main() {
             let project = Project::new(project::Config {
                 current_dir,
                 name: name.clone(),
-                template: project::Template::CounterTailwind,
+                template: project::Template::ElmioTailwind,
             });
 
             let res = project.create();
@@ -111,7 +111,7 @@ fn main() {
                     let project = Project::new(project::Config {
                         current_dir: current_dir.clone(),
                         name: project_info.project_name.clone(),
-                        template: project::Template::CounterTailwind,
+                        template: project::Template::ElmioTailwind,
                     });
                     let res = project.add_page(&project_info, &name);
                     println!("{:?}", res);
