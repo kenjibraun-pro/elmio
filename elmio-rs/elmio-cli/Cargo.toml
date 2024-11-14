@@ -8,7 +8,7 @@ repository = "https://github.com/xosnrdev/elmio"
 categories = ["command-line-utilities", "web-programming", "development-tools"]
 keywords = ["cli-tools", "web-development"]
 description = """
-A command-line tool for the Elmio web framework.
+CLI helper tool for working with elmio projects.
 """
 
 [[bin]]
@@ -36,3 +36,4 @@ convert_case = "0.6.0"
 tempfile = "3.14.0"
 notify = "7.0.0"
 gitignored = "0.4.0"
+clap = { version = "4.5.21", features = ["derive"] }
