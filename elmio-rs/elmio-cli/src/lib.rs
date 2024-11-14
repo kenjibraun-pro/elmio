@@ -1,4 +1,5 @@
 pub mod asset_hasher;
+pub mod backlog_builder;
 pub mod build;
 pub mod cleaner;
 pub mod exec;
