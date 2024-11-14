@@ -9,4 +9,5 @@ pub mod project_info;
 pub mod rust_builder;
 pub mod script_runner;
 pub mod serve;
+pub mod watch;
 pub mod web_builder;
