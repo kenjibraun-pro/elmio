@@ -1,5 +1,6 @@
 pub mod asset_hasher;
 pub mod build;
+pub mod cleaner;
 pub mod exec;
 pub mod file_util;
 pub mod project_info;
