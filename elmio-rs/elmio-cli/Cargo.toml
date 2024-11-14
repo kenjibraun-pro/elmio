@@ -2,5 +2,22 @@
 name = "elmio-cli"
 version = "0.1.0"
 edition = "2021"
+authors = ["Success Kingsley <hello@xosnrdev.tech>"]
+license = "Apache-2.0"
+repository = "https://github.com/xosnrdev/elmio"
+categories = ["command-line-utilities", "web-programming", "development-tools"]
+keywords = ["cli-tools", "web-development"]
+description = """
+A command-line tool for the Elmio web framework.
+"""
+
+[[bin]]
+name = "elmio"
+path = "src/main.rs"
+
+[lib]
+path = "src/lib.rs"
 
 [dependencies]
+toml = "0.8.19"
+serde = { workspace = true }
