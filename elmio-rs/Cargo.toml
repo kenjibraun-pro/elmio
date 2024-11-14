@@ -1,7 +1,3 @@
 [workspace]
 resolver = "2"
-members = [
-    "elmio-macro",
-    "elmio-core"
-    # "elmio-cli",
-]
+members = ["elmio-macro", "elmio-core", "elmio-cli"]
