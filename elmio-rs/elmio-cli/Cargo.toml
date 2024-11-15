@@ -2,9 +2,6 @@
 name = "elmio-cli"
 version = "0.2.0"
 edition = "2021"
-authors = ["Success Kingsley <hello@xosnrdev.tech>"]
-license = "Apache-2.0"
-repository = "https://github.com/xosnrdev/elmio"
 categories = ["command-line-utilities", "web-programming", "development-tools"]
 keywords = ["cli-tools", "web-development"]
 description = """

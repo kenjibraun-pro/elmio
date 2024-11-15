@@ -2,5 +2,10 @@
 resolver = "2"
 members = ["elmio-macro", "elmio-core", "elmio-cli"]
 
+[workspace.package]
+authors = ["Success Kingsley <hello@xosnrdev.tech>"]
+license = "Apache-2.0"
+repository = "https://github.com/xosnrdev/elmio"
+
 [workspace.dependencies]
-serde ={ version = "1.0.214", features = ["derive"] }
+serde = { version = "1.0.214", features = ["derive"] }
