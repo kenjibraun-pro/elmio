@@ -7,6 +7,8 @@ keywords = ["cli-tools", "web-development"]
 description = """
 CLI helper tool for working with elmio projects.
 """
+license.workspace = true
+repository.workspace = true
 
 [[bin]]
 name = "elmio"
