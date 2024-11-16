@@ -6,6 +6,7 @@ members = ["elmio-macro", "elmio-core", "elmio-cli"]
 authors = ["Success Kingsley <hello@xosnrdev.tech>"]
 license = "Apache-2.0"
 repository = "https://github.com/xosnrdev/elmio"
+edition = "2021"
 
 [workspace.dependencies]
 serde = { version = "1.0.214", features = ["derive"] }
