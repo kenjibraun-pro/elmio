@@ -32,6 +32,7 @@ enum Commands {
         name: String,
     },
 
+    /// Add a new file to the project
     Add {
         #[clap(subcommand)]
         command: AddCommand,
@@ -78,7 +79,7 @@ enum Commands {
 
 #[derive(Debug, Subcommand)]
 enum AddCommand {
-    /// Create a new project
+    /// Add a new page
     #[clap(arg_required_else_help = true)]
     Page {
         /// Page name
