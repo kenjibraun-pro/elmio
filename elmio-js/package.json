@@ -1,50 +1,41 @@
 {
-  "name": "elmio-js",
-  "version": "1.0.1",
-  "description": "The Javascript runtime counterpart for elmio-rs. Uses morphdom to partially update the DOM.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "scripts": {
-    "fmt": "biome format --write .",
-    "check": "biome check --write .",
-    "fix": "biome check --fix .",
-    "test": "vitest",
-    "build": "tsup"
-  },
-  "keywords": [
-    "morphdom",
-    "javascript-runtime",
-    "web-framework",
-    "DOM"
-  ],
-  "author": "Success Kingsley <hello@xosnrdev.tech>",
-  "license": "Apache-2.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/xosnrdev/elmio.git"
-  },
-  "files": [
-    "dist"
-  ],
-  "bugs": {
-    "url": "https://github.com/xosnrdev/elmio/issues"
-  },
-  "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
-  "devDependencies": {
-    "@biomejs/biome": "1.9.4",
-    "happy-dom": "15.11.4",
-    "tsup": "8.3.5",
-    "typescript": "5.6.3",
-    "vitest": "2.1.4"
-  },
-  "engines": {
-    "node": ">=20.11.0",
-    "yarn": "Please use pnpm",
-    "npm": "Please use pnpm"
-  },
-  "dependencies": {
-    "fast-equals": "5.0.1",
-    "morphdom": "2.7.4"
-  }
+    "name": "elmio-js",
+    "version": "1.0.1",
+    "description": "The Javascript runtime counterpart for elmio-rs. Uses morphdom to partially update the DOM.",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "type": "module",
+    "scripts": {
+        "fmt": "biome format --write .",
+        "check": "biome check --write .",
+        "fix": "biome check --fix .",
+        "test": "vitest",
+        "build": "tsup"
+    },
+    "keywords": ["morphdom", "javascript-runtime", "web-framework", "DOM"],
+    "author": "Success Kingsley <hello@xosnrdev.tech>",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xosnrdev/elmio.git"
+    },
+    "files": ["dist"],
+    "bugs": {
+        "url": "https://github.com/xosnrdev/elmio/issues"
+    },
+    "packageManager": "pnpm@9.12.3+sha512.cce0f9de9c5a7c95bef944169cc5dfe8741abfb145078c0d508b868056848a87c81e626246cb60967cbd7fd29a6c062ef73ff840d96b3c86c40ac92cf4a813ee",
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "happy-dom": "15.11.4",
+        "tsup": "8.3.5",
+        "typescript": "5.6.3",
+        "vitest": "2.1.4"
+    },
+    "engines": {
+        "node": ">=20.11.0"
+    },
+    "dependencies": {
+        "fast-equals": "5.0.1",
+        "morphdom": "2.7.4"
+    }
 }
