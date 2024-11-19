@@ -134,22 +134,15 @@ pub struct TemplateInfo {
 impl Template {
     pub fn info(&self) -> TemplateInfo {
         match self {
-            Template::ElmioTailwind => {
-                // fmt
-                TemplateInfo {
-                    url:
-                        "https://github.com/xosnrdev/elmio-templates/archive/refs/heads/master.zip"
-                            .to_string(),
-                    path: "elmio-tailwind".to_string(),
-                    placeholder: "app".to_string(),
-                    default_page_name: PageName::new("home_page"),
-                }
-            }
+            Template::ElmioTailwind => TemplateInfo {
+                url: "https://github.com/xosnrdev/elmio-templates/archive/refs/heads/master.zip"
+                    .to_string(),
+                path: "elmio-tailwind".to_string(),
+                placeholder: "app".to_string(),
+                default_page_name: PageName::new("home_page"),
+            },
 
-            Template::Custom(info) => {
-                // fmt
-                info.clone()
-            }
+            Template::Custom(info) => info.clone(),
         }
     }
 }
@@ -199,19 +192,16 @@ fn replace_placeholders(
 }
 
 fn collect_dir_entries(template_dir: &PathBuf) -> Paths {
-    let entries = WalkDir::new(template_dir).into_iter().filter_map(|entry| {
-        match entry {
-            Ok(entry) => {
-                //fmt
-                Some(entry)
-            }
+    let entries = WalkDir::new(template_dir)
+        .into_iter()
+        .filter_map(|entry| match entry {
+            Ok(entry) => Some(entry),
 
             Err(err) => {
                 eprintln!("Warning: Can't access file: {}", err);
                 None
             }
-        }
-    });
+        });
 
     let mut files: Vec<PathBuf> = Vec::new();
     let mut dirs: Vec<PathBuf> = Vec::new();

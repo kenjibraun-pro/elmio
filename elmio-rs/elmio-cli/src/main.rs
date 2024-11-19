@@ -102,22 +102,19 @@ fn main() {
             println!("{:?}", res);
         }
 
-        Commands::Add { command } => {
-            // fmt
-            match command {
-                AddCommand::Page { name } => {
-                    let current_dir = get_current_dir();
-                    let project_info = ProjectInfo::from_dir(&current_dir).unwrap();
-                    let project = Project::new(project::Config {
-                        current_dir: current_dir.clone(),
-                        name: project_info.project_name.clone(),
-                        template: project::Template::ElmioTailwind,
-                    });
-                    let res = project.add_page(&project_info, &name);
-                    println!("{:?}", res);
-                }
+        Commands::Add { command } => match command {
+            AddCommand::Page { name } => {
+                let current_dir = get_current_dir();
+                let project_info = ProjectInfo::from_dir(&current_dir).unwrap();
+                let project = Project::new(project::Config {
+                    current_dir: current_dir.clone(),
+                    name: project_info.project_name.clone(),
+                    template: project::Template::ElmioTailwind,
+                });
+                let res = project.add_page(&project_info, &name);
+                println!("{:?}", res);
             }
-        }
+        },
 
         Commands::Build {
             script,

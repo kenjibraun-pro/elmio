@@ -94,17 +94,12 @@ impl AssetHasher {
     fn collect_files_by_ext(&self, path: &PathBuf, extension: &str) -> Vec<PathBuf> {
         WalkDir::new(path)
             .into_iter()
-            .filter_map(|entry| {
-                match entry {
-                    Ok(entry) => {
-                        //fmt
-                        Some(entry.path().to_path_buf())
-                    }
+            .filter_map(|entry| match entry {
+                Ok(entry) => Some(entry.path().to_path_buf()),
 
-                    Err(err) => {
-                        eprintln!("Warning: Can't access file: {}", err);
-                        None
-                    }
+                Err(err) => {
+                    eprintln!("Warning: Can't access file: {}", err);
+                    None
                 }
             })
             .filter(|path| path.extension() == Some(OsStr::new(extension)))
@@ -114,17 +109,12 @@ impl AssetHasher {
     fn collect_files(&self, path: &PathBuf) -> Vec<PathBuf> {
         WalkDir::new(path)
             .into_iter()
-            .filter_map(|entry| {
-                match entry {
-                    Ok(entry) => {
-                        //fmt
-                        Some(entry.path().to_path_buf())
-                    }
+            .filter_map(|entry| match entry {
+                Ok(entry) => Some(entry.path().to_path_buf()),
 
-                    Err(err) => {
-                        eprintln!("Warning: Can't access file: {}", err);
-                        None
-                    }
+                Err(err) => {
+                    eprintln!("Warning: Can't access file: {}", err);
+                    None
                 }
             })
             .filter(|path| path.is_file())

@@ -216,10 +216,7 @@ fn compare_path_paths(req_parts: &Vec<String>, route_parts: &Vec<String>) -> boo
         req_parts
             .iter()
             .zip(route_parts.iter())
-            .all(|(req_part, route_part)| {
-                // fmt
-                req_part == route_part || route_part == "*"
-            })
+            .all(|(req_part, route_part)| req_part == route_part || route_part == "*")
     } else {
         false
     }
@@ -295,10 +292,7 @@ fn listen_port_from_str(s: &str) -> u32 {
     let n = s
         .chars()
         .filter(char::is_ascii_alphanumeric)
-        .fold(0, |sum, c| {
-            // fmt
-            sum + c.to_digit(36).unwrap_or_default()
-        });
+        .fold(0, |sum, c| sum + c.to_digit(36).unwrap_or_default());
 
     8000 + (n % 1000)
 }
