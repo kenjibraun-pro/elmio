@@ -16,9 +16,7 @@ use elmio_cli::{
 };
 
 #[derive(Debug, Parser)]
-#[clap(name = "elmio")]
-#[clap(about = "CLI helper tool for working with elmio projects", long_about = None)]
-#[command(version)]
+#[command(about, author, version, long_about = None)]
 struct Cli {
     #[clap(subcommand)]
     command: Commands,
