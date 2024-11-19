@@ -22,71 +22,74 @@ use elmio_cli::{
 
 #[derive(Debug, Parser)]
 #[command(about, author, version, long_about = None)]
+#[command(propagate_version = true)]
 struct Cli {
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: Commands,
 }
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    /// Create a new project
-    #[clap(arg_required_else_help = true)]
+    /// Create a new project with the specified name.
+    #[command(arg_required_else_help = true)]
     New {
-        /// Post build script to run after build
+        /// Name of the project to create.
         name: String,
     },
 
-    /// Add a new file to the project
+    /// Add a new resource to the project.
     Add {
-        #[clap(subcommand)]
+        /// Type of resource to add (e.g., page, component).
+        #[command(subcommand)]
         command: AddCommand,
     },
 
-    /// Build the project
+    /// Build the project with optional configurations.
     #[clap(arg_required_else_help = false)]
     Build {
-        /// Release build
-        #[clap(long)]
+        /// Build in release mode (optimized for production).
+        #[arg(long)]
         release: bool,
 
-        /// Add filehash to filename of assets
-        #[clap(long)]
+        /// Append a file hash to the filenames of assets for cache busting.
+        #[arg(long)]
         hash_assets: bool,
 
-        /// Post build script to run after build
-        #[clap(long)]
+        /// Specify a script to run after the build process completes.
+        #[arg(long)]
         script: Option<String>,
     },
 
-    /// Watch for changes and build
-    #[clap(arg_required_else_help = false)]
+    /// Watch for file changes and rebuild automatically.
+    #[command(arg_required_else_help = false)]
     Watch {
-        /// Post build script to run after build
-        #[clap(long)]
+        /// Specify a script to run after each rebuild.
+        #[arg(long)]
         script: Option<String>,
     },
 
+    /// Serve static files, routes, and headers for local development or testing.
     Serve {
-        /// Path to serve static files from
-        #[clap(long)]
+        /// Directory path to serve static files from.
+        #[arg(long, value_name = "PATH")]
         static_: Option<PathBuf>,
 
-        /// Path to read routes from
-        #[clap(long)]
+        /// File path to load route definitions.
+        #[arg(long, value_name = "PATH")]
         routes: Option<PathBuf>,
 
-        /// Additional response headers
-        #[clap(long)]
+        /// Additional HTTP response headers to include (format: 'key=value').
+        #[arg(long, value_name = "HEADER")]
         header: Vec<String>,
     },
 }
 
 #[derive(Debug, Subcommand)]
 enum AddCommand {
-    /// Add a new page
-    #[clap(arg_required_else_help = true)]
+    /// Add a new page to the project.
+    #[command(arg_required_else_help = true)]
     Page {
-        /// Page name
+        /// Name of the page to add.
         name: String,
     },
 }
