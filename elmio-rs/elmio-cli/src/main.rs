@@ -1,6 +1,6 @@
 use std::{path::PathBuf, process};
 
-use clap::{Parser, Subcommand};
+use clap::{command, Parser, Subcommand};
 use elmio_cli::{
     asset_hasher::{self, AssetHasher},
     backlog_builder::{self, BacklogBuilder},
@@ -18,6 +18,7 @@ use elmio_cli::{
 #[derive(Debug, Parser)]
 #[clap(name = "elmio")]
 #[clap(about = "CLI helper tool for working with elmio projects", long_about = None)]
+#[command(version)]
 struct Cli {
     #[clap(subcommand)]
     command: Commands,
