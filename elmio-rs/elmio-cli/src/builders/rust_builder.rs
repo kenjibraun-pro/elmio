@@ -1,9 +1,11 @@
 use std::{fmt, fs, io, path::PathBuf};
 
 use crate::{
-    build::{Env, Runner},
-    exec,
-    project_info::ProjectInfo,
+    commands::{
+        build::{Env, Runner},
+        exec,
+    },
+    utils::project_info::ProjectInfo,
 };
 
 #[derive(Debug, Clone)]

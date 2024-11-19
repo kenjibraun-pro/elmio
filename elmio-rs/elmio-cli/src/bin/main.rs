@@ -2,88 +2,94 @@ use std::{path::PathBuf, process};
 
 use clap::{command, Parser, Subcommand};
 use elmio_cli::{
-    asset_hasher::{self, AssetHasher},
-    backlog_builder::{self, BacklogBuilder},
-    build::{Env, Runner},
-    cleaner::{self, Cleaner},
+    builders::{
+        backlog_builder::{self, BacklogBuilder},
+        rust_builder::{self, RustBuilder},
+        web_builder::{self, WebBuilder},
+    },
+    commands::{
+        build::{Env, Runner},
+        cleaner::{self, Cleaner},
+        script_runner::{self, ScriptRunner},
+        serve, watch,
+    },
     project::{self, Project},
-    project_info::ProjectInfo,
-    rust_builder::{self, RustBuilder},
-    script_runner::{self, ScriptRunner},
-    serve,
-    watch::{self},
-    web_builder::{self, WebBuilder},
+    utils::{
+        asset_hasher::{self, AssetHasher},
+        project_info::ProjectInfo,
+    },
 };
 
 #[derive(Debug, Parser)]
-#[clap(name = "elmio")]
-#[clap(about = "CLI helper tool for working with elmio projects", long_about = None)]
-#[command(version)]
+#[command(about, author, version, long_about = None)]
+#[command(propagate_version = true)]
 struct Cli {
-    #[clap(subcommand)]
+    #[command(subcommand)]
     command: Commands,
 }
 
 #[derive(Debug, Subcommand)]
 enum Commands {
-    /// Create a new project
-    #[clap(arg_required_else_help = true)]
+    /// Create a new project with the specified name.
+    #[command(arg_required_else_help = true)]
     New {
-        /// Post build script to run after build
+        /// Name of the project to create.
         name: String,
     },
 
-    /// Add a new file to the project
+    /// Add a new resource to the project.
     Add {
-        #[clap(subcommand)]
+        /// Type of resource to add (e.g., page, component).
+        #[command(subcommand)]
         command: AddCommand,
     },
 
-    /// Build the project
+    /// Build the project with optional configurations.
     #[clap(arg_required_else_help = false)]
     Build {
-        /// Release build
-        #[clap(long)]
+        /// Build in release mode (optimized for production).
+        #[arg(long)]
         release: bool,
 
-        /// Add filehash to filename of assets
-        #[clap(long)]
+        /// Append a file hash to the filenames of assets for cache busting.
+        #[arg(long)]
         hash_assets: bool,
 
-        /// Post build script to run after build
-        #[clap(long)]
+        /// Specify a script to run after the build process completes.
+        #[arg(long)]
         script: Option<String>,
     },
 
-    /// Watch for changes and build
-    #[clap(arg_required_else_help = false)]
+    /// Watch for file changes and rebuild automatically.
+    #[command(arg_required_else_help = false)]
     Watch {
-        /// Post build script to run after build
-        #[clap(long)]
+        /// Specify a script to run after each rebuild.
+        #[arg(long)]
         script: Option<String>,
     },
 
+    /// Serve static files, routes, and headers for local development or testing.
     Serve {
-        /// Path to serve static files from
-        #[clap(long)]
+        /// Directory path to serve static files from.
+        #[arg(long, value_name = "PATH")]
         static_: Option<PathBuf>,
 
-        /// Path to read routes from
-        #[clap(long)]
+        /// File path to load route definitions.
+        #[arg(long, value_name = "PATH")]
         routes: Option<PathBuf>,
 
-        /// Additional response headers
-        #[clap(long)]
+        /// Additional HTTP response headers to include (format: 'key=value').
+        #[arg(long, value_name = "HEADER")]
         header: Vec<String>,
     },
 }
 
 #[derive(Debug, Subcommand)]
 enum AddCommand {
-    /// Add a new page
-    #[clap(arg_required_else_help = true)]
+    /// Add a new page to the project.
+    #[command(arg_required_else_help = true)]
     Page {
-        /// Page name
+        /// Name of the page to add.
         name: String,
     },
 }
@@ -104,22 +110,19 @@ fn main() {
             println!("{:?}", res);
         }
 
-        Commands::Add { command } => {
-            // fmt
-            match command {
-                AddCommand::Page { name } => {
-                    let current_dir = get_current_dir();
-                    let project_info = ProjectInfo::from_dir(&current_dir).unwrap();
-                    let project = Project::new(project::Config {
-                        current_dir: current_dir.clone(),
-                        name: project_info.project_name.clone(),
-                        template: project::Template::ElmioTailwind,
-                    });
-                    let res = project.add_page(&project_info, &name);
-                    println!("{:?}", res);
-                }
+        Commands::Add { command } => match command {
+            AddCommand::Page { name } => {
+                let current_dir = get_current_dir();
+                let project_info = ProjectInfo::from_dir(&current_dir).unwrap();
+                let project = Project::new(project::Config {
+                    current_dir: current_dir.clone(),
+                    name: project_info.project_name.clone(),
+                    template: project::Template::ElmioTailwind,
+                });
+                let res = project.add_page(&project_info, &name);
+                println!("{:?}", res);
             }
-        }
+        },
 
         Commands::Build {
             script,

@@ -10,7 +10,7 @@ use notify::{
     Event, EventKind, RecursiveMode, Watcher,
 };
 
-use crate::backlog_builder::{self, BacklogBuilder, ChangeType};
+use crate::builders::backlog_builder::{self, BacklogBuilder, ChangeType};
 
 #[derive(Debug, Clone)]
 pub struct Config {
@@ -130,7 +130,6 @@ fn is_ignored(config: &Config, path: &Path) -> bool {
 
 fn is_ignored_by_component(path: &Path) -> bool {
     path.components().any(|component| {
-        // fmt
         component == path::Component::Normal("wasm".as_ref())
             || component == path::Component::Normal("wasm_backend".as_ref())
             || component == path::Component::Normal("dist".as_ref())
@@ -155,10 +154,22 @@ fn is_ignored_by_git(config: &Config, path: &Path) -> bool {
 
 fn filepath_from_event(event: &Event) -> Result<PathBuf, Error> {
     match &event.kind {
-        EventKind::Create(create_kind) => {
-            // Prevent rustfmt
-            match create_kind {
-                CreateKind::File => {
+        EventKind::Create(create_kind) => match create_kind {
+            CreateKind::File => {
+                let path = event
+                    .paths
+                    .first()
+                    .ok_or(Error::EventFilePath(event.clone()))?;
+
+                Ok(path.clone())
+            }
+
+            _ => Err(Error::IgnoredEvent(event.clone())),
+        },
+
+        EventKind::Modify(modify_kind) => match modify_kind {
+            ModifyKind::Data(data_change) => match data_change {
+                DataChange::Content => {
                     let path = event
                         .paths
                         .first()
@@ -168,40 +179,19 @@ fn filepath_from_event(event: &Event) -> Result<PathBuf, Error> {
                 }
 
                 _ => Err(Error::IgnoredEvent(event.clone())),
+            },
+
+            ModifyKind::Name(_) => {
+                let path = event
+                    .paths
+                    .first()
+                    .ok_or(Error::EventFilePath(event.clone()))?;
+
+                Ok(path.clone())
             }
-        }
 
-        EventKind::Modify(modify_kind) => {
-            // Prevent rustfmt
-            match modify_kind {
-                ModifyKind::Data(data_change) => {
-                    // Prevent rustfmt
-                    match data_change {
-                        DataChange::Content => {
-                            let path = event
-                                .paths
-                                .first()
-                                .ok_or(Error::EventFilePath(event.clone()))?;
-
-                            Ok(path.clone())
-                        }
-
-                        _ => Err(Error::IgnoredEvent(event.clone())),
-                    }
-                }
-
-                ModifyKind::Name(_) => {
-                    let path = event
-                        .paths
-                        .first()
-                        .ok_or(Error::EventFilePath(event.clone()))?;
-
-                    Ok(path.clone())
-                }
-
-                _ => Err(Error::IgnoredEvent(event.clone())),
-            }
-        }
+            _ => Err(Error::IgnoredEvent(event.clone())),
+        },
 
         EventKind::Remove(_) => {
             let path = event
@@ -212,9 +202,6 @@ fn filepath_from_event(event: &Event) -> Result<PathBuf, Error> {
             Ok(path.clone())
         }
 
-        _ => {
-            // Prevent rustfmt
-            Err(Error::IgnoredEvent(event.clone()))
-        }
+        _ => Err(Error::IgnoredEvent(event.clone())),
     }
 }

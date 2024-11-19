@@ -1,6 +1,6 @@
 use std::{fmt, path::PathBuf};
 
-use crate::{build::Env, exec};
+use crate::commands::{build::Env, exec};
 
 #[derive(Debug)]
 pub enum Error {
