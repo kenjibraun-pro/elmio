@@ -9,7 +9,7 @@ use regex::Regex;
 use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
-use crate::{file_util, project_info::ProjectInfo};
+use super::{file_util, project_info::ProjectInfo};
 
 pub struct Config {
     pub core_project_path_src: PathBuf,

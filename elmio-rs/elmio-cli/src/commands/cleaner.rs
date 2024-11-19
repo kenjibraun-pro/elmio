@@ -1,6 +1,6 @@
 use std::{fs, io, path::PathBuf};
 
-use crate::project_info::ProjectInfo;
+use crate::utils::project_info::ProjectInfo;
 
 #[derive(Debug, Clone)]
 pub struct Config {

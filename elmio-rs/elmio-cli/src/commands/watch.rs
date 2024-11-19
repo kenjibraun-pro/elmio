@@ -10,7 +10,7 @@ use notify::{
     Event, EventKind, RecursiveMode, Watcher,
 };
 
-use crate::backlog_builder::{self, BacklogBuilder, ChangeType};
+use crate::builders::backlog_builder::{self, BacklogBuilder, ChangeType};
 
 #[derive(Debug, Clone)]
 pub struct Config {

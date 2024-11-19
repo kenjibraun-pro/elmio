@@ -2,17 +2,22 @@ use std::{path::PathBuf, process};
 
 use clap::{command, Parser, Subcommand};
 use elmio_cli::{
-    asset_hasher::{self, AssetHasher},
-    backlog_builder::{self, BacklogBuilder},
-    build::{Env, Runner},
-    cleaner::{self, Cleaner},
+    builders::{
+        backlog_builder::{self, BacklogBuilder},
+        rust_builder::{self, RustBuilder},
+        web_builder::{self, WebBuilder},
+    },
+    commands::{
+        build::{Env, Runner},
+        cleaner::{self, Cleaner},
+        script_runner::{self, ScriptRunner},
+        serve, watch,
+    },
     project::{self, Project},
-    project_info::ProjectInfo,
-    rust_builder::{self, RustBuilder},
-    script_runner::{self, ScriptRunner},
-    serve,
-    watch::{self},
-    web_builder::{self, WebBuilder},
+    utils::{
+        asset_hasher::{self, AssetHasher},
+        project_info::ProjectInfo,
+    },
 };
 
 #[derive(Debug, Parser)]

@@ -8,7 +8,7 @@ use std::{
 use convert_case::{Case, Casing};
 use walkdir::WalkDir;
 
-use crate::{
+use crate::utils::{
     file_util,
     project_info::{self, ProjectInfo},
 };

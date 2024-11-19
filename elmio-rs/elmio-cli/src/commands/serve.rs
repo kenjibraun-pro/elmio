@@ -11,7 +11,7 @@ use base64::{prelude::BASE64_STANDARD, Engine};
 use http::{request, HeaderMap, HeaderName, HeaderValue, Request, Response};
 use mime_guess::Mime;
 
-use crate::exec;
+use crate::commands::exec;
 
 const HTTP1_1: &[u8] = b"HTTP/1.1 200 OK";
 const CRNL: &[u8] = b"\r\n";

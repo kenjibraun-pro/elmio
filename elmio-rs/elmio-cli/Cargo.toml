@@ -12,7 +12,7 @@ repository.workspace = true
 
 [[bin]]
 name = "elmio"
-path = "src/main.rs"
+path = "src/bin/main.rs"
 
 [lib]
 path = "src/lib.rs"

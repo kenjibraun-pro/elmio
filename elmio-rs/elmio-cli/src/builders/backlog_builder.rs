@@ -4,10 +4,13 @@ use std::{
     sync::{atomic::AtomicBool, Arc, Mutex},
 };
 
-use crate::{
+use crate::commands::{
     build::Runner,
-    rust_builder::{self, RustBuilder},
     script_runner::{self, ScriptRunner},
+};
+
+use super::{
+    rust_builder::{self, RustBuilder},
     web_builder::{self, WebBuilder},
 };
 
