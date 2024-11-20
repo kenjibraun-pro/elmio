@@ -119,7 +119,7 @@ struct Paths {
 
 #[derive(Clone)]
 pub enum Template {
-    ElmioTailwind,
+    CounterTailwind,
     Custom(TemplateInfo),
 }
 
@@ -134,11 +134,11 @@ pub struct TemplateInfo {
 impl Template {
     pub fn info(&self) -> TemplateInfo {
         match self {
-            Template::ElmioTailwind => TemplateInfo {
+            Template::CounterTailwind => TemplateInfo {
                 url: "https://github.com/xosnrdev/elmio-templates/archive/refs/heads/master.zip"
                     .to_string(),
-                path: "elmio-tailwind".to_string(),
-                placeholder: "app".to_string(),
+                path: "counter-tailwind".to_string(),
+                placeholder: "counter".to_string(),
                 default_page_name: PageName::new("home_page"),
             },
 
