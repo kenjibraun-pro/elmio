@@ -1,0 +1,29 @@
+{
+    "name": "counter_web",
+    "version": "0.1.0",
+    "type": "module",
+    "scripts": {
+        "fmt": "biome format --write .",
+        "check": "biome check --write .",
+        "fix": "biome check --fix .",
+        "build-dev": "npm run compile-ts && npm run build-js-dev && npm run build-css-dev",
+        "build-release": "npm run compile-ts && npm run build-js-release && npm run build-css-release",
+        "compile-ts": "tsc --noEmit --project .",
+        "build-js-dev": "esbuild src/*_page.ts --bundle --format=esm --target=es2020 --outdir=../dist/",
+        "build-js-release": "esbuild --minify src/*_page.ts --bundle --format=esm --target=es2020 --outdir=../dist/",
+        "build-css-dev": "tailwindcss -i css/app.css -o ../dist/index.css",
+        "build-css-release": "tailwindcss --minify -i css/app.css -o ../dist/index.css"
+    },
+    "devDependencies": {
+        "@biomejs/biome": "1.9.4",
+        "esbuild": "0.24.0",
+        "tailwindcss": "3.4.15",
+        "typescript": "5.6.3"
+    },
+    "engines": {
+        "node": ">=20.11.0"
+    },
+    "dependencies": {
+        "elmio-js": "1.0.2"
+    }
+}
