@@ -138,7 +138,7 @@ impl Template {
                 url: "https://github.com/xosnrdev/elmio-templates/archive/refs/heads/master.zip"
                     .to_string(),
                 path: "counter-tailwind".to_string(),
-                placeholder: "counter".to_string(),
+                placeholder: "counterapp".to_string(),
                 default_page_name: PageName::new("home_page"),
             },
 
