@@ -1,6 +1,6 @@
 [package]
 name = "elmio-cli"
-version = "0.2.1"
+version = "0.2.2"
 edition.workspace = true
 categories = ["command-line-utilities", "web-programming", "development-tools"]
 keywords = ["cli-tools", "web-development"]

@@ -1,38 +1,126 @@
+<div align="center">
+
+<img src="./docs/elmio.svg" width="140px" />
+
 # Elmio
 
-Elmio is a lightweight, proof-of-concept web framework inspired by The Elm Architecture. It's built using the Rust programming language and compiles to WebAssembly.
+A lightweight, proof-of-concept web framework loosely inspired by [The Elm Architecture](https://guide.elm-lang.org/architecture/).
+It's built using the Rust programming language and compiles to WebAssembly.
 
-## Overview
+</div>
 
-Elmio provides a structured approach to building interactive web applications. It has two main components:
+## What is Elmio?
 
-1. **elmio-rs**: The Rust core of the framework.
-2. **elmio-js**: The JavaScript runtime that integrates with the Rust core.
+A simple web framework that helps you build websites with Rust.
 
-The framework exposes a set of functions to the JavaScript runtime, allowing it to handle the application's state management, event handling, and DOM updates.
+Elmio is like building with LEGO® blocks. You have different pieces that fit together to make a website:
 
-## Key Concepts
+- A place to store information (like a toy box)
+- A way to handle actions (like pressing buttons)
+- A way to show things on screen (like arranging LEGO® pieces)
+- A way to make changes (like following LEGO® instructions)
 
-### `init`
+## Getting Started
 
-This function returns the initial state of your application as a JSON object.
+1. Install Prerequisites:
 
-### `view`
+```bash
+cargo install elmio-cli wasm-pack
+```
 
-The `view` function generates the HTML representation of your application's UI as a string, which the JavaScript runtime uses to update the DOM.
+2. Create your first project:
 
-### `update`
+```bash
+elmio new my-website
+cd my-website
+```
 
-When an event is triggered, the `update` function is called with the current state. It returns the new state and a list of effects (e.g., focus an element) as JSON.
+3. Start your website:
 
-### `subscriptions`
+```bash
+elmio serve
+```
 
-This function defines the event listeners, intervals, and other asynchronous tasks your application needs. It returns a declarative list of subscriptions as JSON.
+## How Elmio Works
 
-## Contributing
+Every Elmio website has four main parts:
 
-Elmio is an open-source project, and contributions are welcome! If you encounter any issues or have ideas for improvements, please feel free to submit them via the project's issue tracker or open a pull request.
+1. **State** - Information your website remembers
+
+   ```rust
+   struct Model {
+       count: isize,  // Remembers a number
+   }
+   ```
+
+2. **Messages** - Things that can happen
+
+   ```rust
+   enum Msg {
+       Increment,  // Add one
+       Decrement,  // Subtract one
+   }
+   ```
+
+3. **View** - What people see
+
+   ```rust
+   fn view(model: &Model) -> Markup {
+       html! {
+           button { "−" }
+           span { (model.count) }
+           button { "+" }
+       }
+   }
+   ```
+
+4. **Update** - How things change
+   ```rust
+   fn update(msg: &Msg, model: &mut Model) {
+       match msg {
+           Msg::Increment => model.count += 1,
+           Msg::Decrement => model.count -= 1,
+       }
+   }
+   ```
+
+## Helpful Commands
+
+```bash
+elmio new my-website     # Make a new website
+elmio serve             # Start your website
+elmio watch            # Auto-update while you work
+elmio build            # Make your website ready for the internet
+```
+
+## Want to Learn More?
+
+1. Look at the examples in the [examples](./examples/) folder
+2. Each example shows you how to build something cool
+3. Try changing small parts to see what happens
+
+## Need Ideas? Check These Examples:
+
+The [examples](./examples/) folder has complete projects you can learn from:
+
+- A counting button with tailwindcss
+- And more coming soon!
+
+## Want to Help Make Elmio Better?
+
+1. Fork the repository
+2. Make your changes
+3. Share your improvements with elmio!
+
+## Remember
+
+Just like with LEGO®, start simple:
+
+1. Decide what information to remember (State)
+2. Plan what can happen (Messages)
+3. Design what people see (View)
+4. Choose how things change (Update)
 
 ## License
 
-Elmio is licensed under the [Apache 2.0 License](LICENSE).
+This is open source software - you can use it, share it, and learn from it freely under the [Apache 2.0](./LICENSE) License!
