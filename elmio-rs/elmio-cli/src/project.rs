@@ -1,6 +1,6 @@
 use std::{
     convert::identity,
-    fs,
+    fmt, fs,
     io::{self, Cursor},
     path::{Path, PathBuf},
 };
@@ -39,6 +39,29 @@ pub enum Error {
     ReadCoreHomePage(io::Error),
     WriteCoreHomePage(io::Error),
     ReadLibFile(io::Error),
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Error::InvalidProjectName => write!(f, "Invalid project name"),
+            Error::TempDir(err) => write!(f, "Error creating temp dir: {}", err),
+            Error::GetUrl(err) => write!(f, "Error getting template: {}", err),
+            Error::ReadResponse(err) => write!(f, "Error reading response: {}", err),
+            Error::ZipExtract(err) => write!(f, "Error extracting zip: {}", err),
+            Error::ReadFile(err) => write!(f, "Error reading file: {}", err),
+            Error::WriteFile(err) => write!(f, "Error writing file: {}", err),
+            Error::RenameDir(err) => write!(f, "Error renaming dir: {}", err),
+            Error::CopyToDestination(err) => write!(f, "Error copying to destination: {}", err),
+            Error::RenameTemplateDir(err) => write!(f, "Error renaming template dir: {}", err),
+            Error::TemplateProjectInfo(err) => {
+                write!(f, "Error getting template project info: {:?}", err)
+            }
+            Error::ReadCoreHomePage(err) => write!(f, "Error reading core home page: {}", err),
+            Error::WriteCoreHomePage(err) => write!(f, "Error writing core home page: {}", err),
+            Error::ReadLibFile(err) => write!(f, "Error reading lib file: {}", err),
+        }
+    }
 }
 
 impl Project {
@@ -224,13 +247,6 @@ fn replace_placeholder_in_file(
     template_info: &TemplateInfo,
     file_path: &PathBuf,
 ) -> Result<(), Error> {
-    println!(
-        "Replacing placeholder: {} -> {} in {}",
-        template_info.placeholder,
-        project_name,
-        file_path.display()
-    );
-
     let old_file = file_util::read(file_path).map_err(Error::ReadFile)?;
 
     let new_content = old_file
@@ -259,11 +275,6 @@ fn replace_placeholder_in_dir(
         let new_dir_path = dir_path.with_file_name(&new_dir_name);
 
         if new_dir_name != old_dir_name {
-            println!(
-                "Renaming {} -> {}",
-                dir_path.display(),
-                new_dir_path.display()
-            );
             fs::rename(dir_path, new_dir_path).map_err(Error::RenameDir)?;
         }
     }

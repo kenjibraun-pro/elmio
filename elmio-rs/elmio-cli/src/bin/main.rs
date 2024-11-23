@@ -100,27 +100,43 @@ fn main() {
     match args.command {
         Commands::New { name } => {
             let current_dir = get_current_dir();
-            let project = Project::new(project::Config {
+            let config = project::Config {
                 current_dir,
-                name: name.clone(),
+                name,
                 template: project::Template::CounterTailwind,
-            });
+            };
+            let project = Project::new(config);
 
-            let res = project.create();
-            println!("{:?}", res);
+            match project.create() {
+                Ok(_) => {
+                    println!("Project created successfully!");
+                }
+                Err(err) => {
+                    eprintln!("Error: {}", err);
+                    process::exit(1);
+                }
+            }
         }
 
         Commands::Add { command } => match command {
             AddCommand::Page { name } => {
                 let current_dir = get_current_dir();
                 let project_info = ProjectInfo::from_dir(&current_dir).unwrap();
-                let project = Project::new(project::Config {
-                    current_dir: current_dir.clone(),
+                let config = project::Config {
+                    current_dir,
                     name: project_info.project_name.clone(),
                     template: project::Template::CounterTailwind,
-                });
-                let res = project.add_page(&project_info, &name);
-                println!("{:?}", res);
+                };
+                let project = Project::new(config);
+                match project.add_page(&project_info, &name) {
+                    Ok(_) => {
+                        println!("Page added successfully!");
+                    }
+                    Err(err) => {
+                        eprintln!("Error: {}", err);
+                        process::exit(1);
+                    }
+                }
             }
         },
 
